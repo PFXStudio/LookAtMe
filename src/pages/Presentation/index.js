@@ -45,6 +45,7 @@ import footerRoutes from "footer.routes";
 
 // Images
 import bgImage from "assets/images/bg-presentation.jpg";
+import Client from "clients/client";
 
 function Presentation() {
   return (
@@ -96,6 +97,7 @@ function Presentation() {
               developers around the world.
             </MKTypography>
           </Grid>
+          <Client />
         </Container>
       </MKBox>
       <Card
