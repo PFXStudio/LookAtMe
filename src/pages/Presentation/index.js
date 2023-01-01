@@ -45,7 +45,9 @@ import footerRoutes from "footer.routes";
 
 // Images
 import bgImage from "assets/images/bg-presentation.jpg";
-import Client from "clients/client";
+
+import Timer from "commons/timer";
+import UseCaseFetchApi from 'usecases/UseCaseFetchApi';
 
 function Presentation() {
   return (
@@ -97,9 +99,14 @@ function Presentation() {
               developers around the world.
             </MKTypography>
           </Grid>
-          <Client />
         </Container>
       </MKBox>
+      <Container>
+      <Timer />
+      </Container>
+      <Container>
+      <UseCaseFetchApi />
+      </Container>
       <Card
         sx={{
           p: 2,

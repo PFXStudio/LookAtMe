@@ -14,6 +14,7 @@ Coded by www.creative-tim.com
 */
 
 import { useState } from "react";
+import { useReducer } from "react";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
@@ -44,11 +45,113 @@ import routes from "routes";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import Timer from "commons/timer";
+import { useCaseLogin } from "usecases/useCaseLogin";
+
+const EventType = {
+  loggedOut: 'loggedOut',
+  loggedIn: 'loggedIn',
+  rememberMe: 'rememberMe',
+  loading: 'loading',
+  idle: 'idle',
+  error: 'error',
+  email: 'email',
+  password: 'password',
+};
+
+const reducer = (prevState, eventType) => {
+  console.log(prevState);
+  console.log(eventType);
+  switch (eventType) {
+      case EventType.loggedIn:
+          return {
+              ...prevState, 
+              loggedIn: true,
+          };
+
+      case EventType.loggedOut:
+          return {
+              ...prevState,
+              loggedIn: false,
+              email: '',
+              password: '',
+          };
+      case EventType.rememberMe:
+        return {
+          ...prevState,
+          rememberMe: eventType.payload
+        };
+      
+      case EventType.loading:
+        return {
+          ...prevState,
+          isLoading: true,
+        };
+
+      case EventType.idle:
+        return {
+          ...prevState,
+          isLoading: false,
+        };
+      case EventType.error:
+        return {
+          ...prevState,
+          error: 'error',
+        };
+      case EventType.email:
+        return {
+          ...prevState,
+          email: eventType.payload,
+        };
+      case EventType.password:
+        return {
+          ...prevState,
+          password: eventType.payload,
+        };
+  }
+};
+
+const initialState = {
+  email: '',
+  password: '',
+  loggedIn: false,
+  rememberMe: false,
+  isLoading: false,
+  error: ''
+};
 
 function SignInBasic() {
-  const [rememberMe, setRememberMe] = useState(false);
+  const [state, dispatcher] = useReducer(reducer, initialState);
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const emailHandler = e => {
+    dispatcher({ type: EventType.email, payload: e.target.value });
+};
+
+const passwordHandler = e => {
+    dispatcher({ type: EventType.password, payload: e.target.value });
+};
+
+  const rememberMeHandler = async e => {
+    try {
+      dispatcher({ type: EventType.rememberMe, payload: e.target.value });
+    } catch {
+      dispatcher({ type: EventType.error });
+      alert('🚨 error rememberMe');
+    }
+  };
+
+  const signInHandler = async e => {
+    e.preventDefault();
+    try {
+      dispatcher({ type: EventType.loading });
+      await useCaseLogin({ username: state.email, password: state.password });
+      dispatcher({ type: EventType.idle });
+      dispatcher({ type: EventType.loggedIn });
+    } catch {
+      dispatcher({ type: EventType.error });
+      alert('🚨 Incorrect username or password');
+    }
+  };
 
   return (
     <>
@@ -99,7 +202,7 @@ function SignInBasic() {
                 <MKTypography variant="h4" fontWeight="medium" color="white" mt={1}>
                   Sign in
                 </MKTypography>
-                <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
+                {/* <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
                   <Grid item xs={2}>
                     <MKTypography component={MuiLink} href="#" variant="body1" color="white">
                       <FacebookIcon color="inherit" />
@@ -115,30 +218,31 @@ function SignInBasic() {
                       <GoogleIcon color="inherit" />
                     </MKTypography>
                   </Grid>
-                </Grid>
+                </Grid> */}
               </MKBox>
               <MKBox pt={4} pb={3} px={3}>
                 <MKBox component="form" role="form">
                   <MKBox mb={2}>
-                    <MKInput type="email" label="Email" fullWidth />
+                    <MKInput type="email" label="Email" fullWidth onChange={emailHandler} value={state.email}/>
                   </MKBox>
                   <MKBox mb={2}>
-                    <MKInput type="password" label="Password" fullWidth />
+                    <MKInput type="password" label="Password" fullWidth onChange={passwordHandler} value={state.password}/>
                   </MKBox>
                   <MKBox display="flex" alignItems="center" ml={-1}>
-                    <Switch checked={rememberMe} onChange={handleSetRememberMe} />
+                    {/* <Switch checked={state.rememberMe} onChange={rememberMeHandler} /> */}
+                    <Switch onChange={rememberMeHandler} />
                     <MKTypography
                       variant="button"
                       fontWeight="regular"
                       color="text"
-                      onClick={handleSetRememberMe}
+                      onClick={rememberMeHandler}
                       sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
                     >
                       &nbsp;&nbsp;Remember me
                     </MKTypography>
                   </MKBox>
                   <MKBox mt={4} mb={1}>
-                    <MKButton variant="gradient" color="info" fullWidth>
+                    <MKButton variant="gradient" color="info" fullWidth onClick={signInHandler}>
                       sign in
                     </MKButton>
                   </MKBox>
@@ -163,6 +267,7 @@ function SignInBasic() {
           </Grid>
         </Grid>
       </MKBox>
+
       <MKBox width="100%" position="absolute" zIndex={2} bottom="1.625rem">
         <SimpleFooter light />
       </MKBox>
