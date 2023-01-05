@@ -62,52 +62,52 @@ const EventType = {
 const reducer = (prevState, eventType) => {
   console.log(prevState);
   console.log(eventType);
-  switch (eventType) {
-      case EventType.loggedIn:
-          return {
-              ...prevState, 
-              loggedIn: true,
-          };
+  switch (eventType.type) {
+    case EventType.loggedIn:
+      return {
+        ...prevState,
+        loggedIn: true,
+      };
 
-      case EventType.loggedOut:
-          return {
-              ...prevState,
-              loggedIn: false,
-              email: '',
-              password: '',
-          };
-      case EventType.rememberMe:
-        return {
-          ...prevState,
-          rememberMe: eventType.payload
-        };
-      
-      case EventType.loading:
-        return {
-          ...prevState,
-          isLoading: true,
-        };
+    case EventType.loggedOut:
+      return {
+        ...prevState,
+        loggedIn: false,
+        email: '',
+        password: '',
+      };
+    case EventType.rememberMe:
+      return {
+        ...prevState,
+        rememberMe: eventType.payload
+      };
 
-      case EventType.idle:
-        return {
-          ...prevState,
-          isLoading: false,
-        };
-      case EventType.error:
-        return {
-          ...prevState,
-          error: 'error',
-        };
-      case EventType.email:
-        return {
-          ...prevState,
-          email: eventType.payload,
-        };
-      case EventType.password:
-        return {
-          ...prevState,
-          password: eventType.payload,
-        };
+    case EventType.loading:
+      return {
+        ...prevState,
+        isLoading: true,
+      };
+
+    case EventType.idle:
+      return {
+        ...prevState,
+        isLoading: false,
+      };
+    case EventType.error:
+      return {
+        ...prevState,
+        error: 'error',
+      };
+    case EventType.email:
+      return {
+        ...prevState,
+        email: eventType.payload,
+      };
+    case EventType.password:
+      return {
+        ...prevState,
+        password: eventType.payload,
+      };
   }
 };
 
@@ -125,15 +125,16 @@ function SignInBasic() {
 
   const emailHandler = e => {
     dispatcher({ type: EventType.email, payload: e.target.value });
-};
+  };
 
-const passwordHandler = e => {
+  const passwordHandler = e => {
     dispatcher({ type: EventType.password, payload: e.target.value });
-};
+  };
 
   const rememberMeHandler = async e => {
     try {
-      dispatcher({ type: EventType.rememberMe, payload: e.target.value });
+      console.log(state.rememberMe)
+      dispatcher({ type: EventType.rememberMe, payload: !state.rememberMe });
     } catch {
       dispatcher({ type: EventType.error });
       alert('🚨 error rememberMe');
@@ -144,12 +145,12 @@ const passwordHandler = e => {
     e.preventDefault();
     try {
       dispatcher({ type: EventType.loading });
-      await useCaseLogin({ username: state.email, password: state.password });
+      await useCaseLogin({ email: state.email, password: state.password });
       dispatcher({ type: EventType.idle });
       dispatcher({ type: EventType.loggedIn });
     } catch {
       dispatcher({ type: EventType.error });
-      alert('🚨 Incorrect username or password');
+      alert('🚨 Incorrect email or password');
     }
   };
 
@@ -223,14 +224,13 @@ const passwordHandler = e => {
               <MKBox pt={4} pb={3} px={3}>
                 <MKBox component="form" role="form">
                   <MKBox mb={2}>
-                    <MKInput type="email" label="Email" fullWidth onChange={emailHandler} value={state.email}/>
+                    <MKInput type="email" label="Email" fullWidth onChange={emailHandler} value={state.email} />
                   </MKBox>
                   <MKBox mb={2}>
-                    <MKInput type="password" label="Password" fullWidth onChange={passwordHandler} value={state.password}/>
+                    <MKInput type="password" label="Password" fullWidth onChange={passwordHandler} value={state.password} />
                   </MKBox>
                   <MKBox display="flex" alignItems="center" ml={-1}>
-                    {/* <Switch checked={state.rememberMe} onChange={rememberMeHandler} /> */}
-                    <Switch onChange={rememberMeHandler} />
+                    <Switch checked={state.rememberMe} onChange={rememberMeHandler} />
                     <MKTypography
                       variant="button"
                       fontWeight="regular"

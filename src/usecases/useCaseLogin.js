@@ -1,7 +1,7 @@
-export async function useCaseLogin({ username, password }) {
+export async function useCaseLogin({ email, password }) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            if (username === 'user' && password === 'password') {
+            if (email === 'email' && password === 'password') {
                 resolve();
             } else {
                 reject();
