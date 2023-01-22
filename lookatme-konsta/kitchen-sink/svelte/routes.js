@@ -30,6 +30,7 @@ import Toggle from './pages/Toggle.svelte';
 import Toolbar from './pages/Toolbar.svelte';
 import LookerTab from './pages/LookerTab/LookerTab.svelte'
 import Main from './pages/Main/Main.svelte'
+import ScrapInput from './pages/Scrap/ScrapInput.svelte'
 
 const pages = {
   Main,
@@ -60,6 +61,7 @@ const pages = {
   SheetModal,
   Stepper,
   Subnavbar,
+  ScrapInput,
   Tabbar,
   Toast,
   Toggle,
