@@ -1,346 +1,99 @@
 <script>
-    import {
-      Page,
-      Navbar,
-      NavbarBackLink,
-      BlockTitle,
-      List,
-      ListInput,
-    } from 'konsta/svelte';
-  
-    import DemoIcon from '../../components/DemoIcon.svelte';
-  
-    const isPreview = document.location.href.includes('examplePreview');
-    let name = { value: '', changed: false };
-    let demoValue = '';
-  
-    const onNameChange = (e) => {
-      name = { value: e.target.value, changed: true };
-    };
-    const onDemoValueChange = (e) => {
-      demoValue = e.target.value;
-    };
-    const onDemoValueClear = () => {
-      demoValue = '';
-    };
-  </script>
-  
-  <Page>
-    <Navbar title="Form Inputs">
-      <svelte:fragment slot="left">
-        {#if !isPreview}
-          <NavbarBackLink onClick={() => history.back()} />
-        {/if}
-      </svelte:fragment>
-    </Navbar>
-  
-    <BlockTitle>Default</BlockTitle>
-    <List strongIos insetIos>
-      <ListInput label="Name" type="text" placeholder="Your name">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput label="Password" type="password" placeholder="Your password">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput label="E-mail" type="email" placeholder="Your e-mail">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput label="URL" type="url" placeholder="URL">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput label="Phone" type="tel" placeholder="Your phone number">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        label="Gender"
-        type="select"
-        dropdown
-        defaultValue="Male"
-        placeholder="Please choose..."
+  import {
+    Page,
+    Navbar,
+    NavbarBackLink,
+    BlockTitle,
+    List,
+    ListInput,
+    Block,
+    Segmented,
+    SegmentedButton,
+    Button,
+  } from "konsta/svelte";
+
+  import DemoIcon from "../../components/DemoIcon.svelte";
+
+  const isPreview = document.location.href.includes("examplePreview");
+  let name = { value: "", changed: false };
+  let demoValue = "";
+  let authType = undefined;
+  let actionsTwoOpened = undefined;
+
+  const onNameChange = (e) => {
+    name = { value: e.target.value, changed: true };
+  };
+  const onDemoValueChange = (e) => {
+    demoValue = e.target.value;
+  };
+  const onDemoValueClear = () => {
+    demoValue = "";
+  };
+</script>
+
+<Page>
+  <Navbar title="정보 가져오기">
+    <svelte:fragment slot="left">
+      {#if !isPreview}
+        <NavbarBackLink onClick={() => history.back()} />
+      {/if}
+    </svelte:fragment>
+  </Navbar>
+
+  <BlockTitle>민간인증서를 이용해 고객님의 회원 정보를 불러 올 거에요.</BlockTitle>
+  <Block strongIos outlineIos class="space-y-4">
+    <Segmented strong>
+      <SegmentedButton strong active={authType === "네이버"} onClick={() => (authType = "네이버")}>
+        <svelte:fragment slot="icon">
+          <DemoIcon slot="media" />
+        </svelte:fragment>
+
+        네이버
+      </SegmentedButton>
+      <SegmentedButton
+        strong
+        active={authType === "카카오톡"}
+        onClick={() => (authType = "카카오톡")}
       >
-        <DemoIcon slot="media" />
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-      </ListInput>
-  
-      <ListInput
-        label="Birthday"
-        type="date"
-        defaultValue="2014-04-30"
-        placeholder="Please choose..."
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        label="Date time"
-        type="datetime-local"
-        placeholder="Please choose..."
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        label="Textarea"
-        type="textarea"
-        placeholder="Bio"
-        inputClass="!h-20 resize-none"
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-    </List>
-  
-    <BlockTitle>Outline</BlockTitle>
-    <List strongIos insetIos>
-      <ListInput outline label="Name" type="text" placeholder="Your name">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        outline
-        label="Password"
-        type="password"
-        placeholder="Your password"
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput outline label="E-mail" type="email" placeholder="Your e-mail">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput outline label="URL" type="url" placeholder="URL">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput outline label="Phone" type="tel" placeholder="Your phone number">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        outline
-        label="Gender"
-        type="select"
-        dropdown
-        defaultValue="Male"
-        placeholder="Please choose..."
-      >
-        <DemoIcon slot="media" />
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-      </ListInput>
-  
-      <ListInput
-        outline
-        label="Birthday"
-        type="date"
-        defaultValue="2014-04-30"
-        placeholder="Please choose..."
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        outline
-        label="Date time"
-        type="datetime-local"
-        placeholder="Please choose..."
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        outline
-        label="Textarea"
-        type="textarea"
-        placeholder="Bio"
-        inputClass="!h-20 resize-none"
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-    </List>
-  
-    <BlockTitle>Floating Labels</BlockTitle>
-    <List strongIos insetIos>
-      <ListInput label="Name" floatingLabel type="text" placeholder="Your name">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        label="Password"
-        floatingLabel
-        type="password"
-        placeholder="Your password"
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        label="E-mail"
-        floatingLabel
-        type="email"
-        placeholder="Your e-mail"
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput label="URL" floatingLabel type="url" placeholder="URL">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        label="Phone"
-        floatingLabel
-        type="tel"
-        placeholder="Your phone number"
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-    </List>
-  
-    <BlockTitle>Outline + Floating Labels</BlockTitle>
-    <List strongIos insetIos>
-      <ListInput
-        outline
-        label="Name"
-        floatingLabel
-        type="text"
-        placeholder="Your name"
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        outline
-        label="Password"
-        floatingLabel
-        type="password"
-        placeholder="Your password"
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        outline
-        label="E-mail"
-        floatingLabel
-        type="email"
-        placeholder="Your e-mail"
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput outline label="URL" floatingLabel type="url" placeholder="URL">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput
-        outline
-        label="Phone"
-        floatingLabel
-        type="tel"
-        placeholder="Your phone number"
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-    </List>
-  
-    <BlockTitle>Validation + Additional Info</BlockTitle>
-    <List strongIos insetIos>
-      <ListInput
-        label="Name"
-        type="text"
-        placeholder="Your name"
-        info="Basic string checking"
-        value={name.value}
-        error={name.changed && !name.value.trim()
-          ? 'Please specify your name'
-          : ''}
-        onInput={onNameChange}
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-    </List>
-  
-    <BlockTitle>Clear Button</BlockTitle>
-    <List strongIos insetIos>
-      <ListInput
-        label="TV Show"
-        type="text"
-        placeholder="Your favorite TV show"
-        info="Type something to see clear button"
-        value={demoValue}
-        clearButton={demoValue.length > 0}
-        onInput={onDemoValueChange}
-        onClear={onDemoValueClear}
-      >
-        <DemoIcon slot="media" />
-      </ListInput>
-    </List>
-  
-    <BlockTitle>Icon + Input</BlockTitle>
-    <List strongIos insetIos>
-      <ListInput type="text" placeholder="Your name">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput type="password" placeholder="Your password">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput type="email" placeholder="Your e-mail">
-        <DemoIcon slot="media" />
-      </ListInput>
-  
-      <ListInput type="url" placeholder="URL">
-        <DemoIcon slot="media" />
-      </ListInput>
-    </List>
-  
-    <BlockTitle>Label + Input</BlockTitle>
-    <List strongIos insetIos>
-      <ListInput label="Name" type="text" placeholder="Your name" />
-  
-      <ListInput label="Password" type="password" placeholder="Your password" />
-  
-      <ListInput label="E-mail" type="email" placeholder="Your e-mail" />
-  
-      <ListInput label="URL" type="url" placeholder="URL" />
-    </List>
-  
-    <BlockTitle>Only Inputs</BlockTitle>
-    <List strongIos insetIos>
-      <ListInput type="text" placeholder="Your name" />
-  
-      <ListInput type="password" placeholder="Your password" />
-  
-      <ListInput type="email" placeholder="Your e-mail" />
-  
-      <ListInput type="url" placeholder="URL" />
-    </List>
-  
-    <BlockTitle>Inputs + Additional Info</BlockTitle>
-    <List strongIos insetIos>
-      <ListInput type="text" placeholder="Your name" info="Full name please" />
-  
-      <ListInput
-        type="password"
-        placeholder="Your password"
-        info="8 characters minimum"
-      />
-  
-      <ListInput
-        type="email"
-        placeholder="Your e-mail"
-        info="Your work e-mail address"
-      />
-  
-      <ListInput type="url" placeholder="URL" info="Your website URL" />
-    </List>
-  </Page>
-  
+        카카오톡
+      </SegmentedButton>
+      <SegmentedButton strong active={authType === "페이코"} onClick={() => (authType = "페이코")}>
+        <svelte:fragment slot="icon">
+          <DemoIcon slot="media" />
+        </svelte:fragment>
+        페이코
+      </SegmentedButton>
+    </Segmented>
+  </Block>
+
+  <List strongIos insetIos>
+    <ListInput outline label="이름" type="text" placeholder="이름을 입력 해 주세요.">
+      <DemoIcon slot="media" />
+    </ListInput>
+
+    <ListInput
+      outline
+      label="생년월일을 입력 해 주세요."
+      type="date"
+      defaultValue=""
+      placeholder="2010-01-01"
+    >
+      <DemoIcon slot="media" />
+    </ListInput>
+
+    <ListInput outline label="핸드폰 번호" type="tel" placeholder="핸드폰 번호를 입력 해 주세요.">
+      <DemoIcon slot="media" />
+    </ListInput>
+
+    <ListInput outline label="E-mail" type="email" placeholder="E-mail을 입력 해 주세요.">
+      <DemoIcon slot="media" />
+    </ListInput>
+
+    <BlockTitle
+      >E-mail을 통해 고객님의 정보를 찾아 올 수 있어요. 정확하게 입력 해 주세요.</BlockTitle
+    >
+  </List>
+  <Block outlineIos class="space-y-2">
+    <Button large class="k-color-brand-yellow">Button</Button>
+  </Block>
+</Page>

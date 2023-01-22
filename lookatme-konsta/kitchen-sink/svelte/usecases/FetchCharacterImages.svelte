@@ -1,6 +1,7 @@
 <script>
   import { Card, Link, Button } from "konsta/svelte";
   export let route = undefined;
+  export let title = undefined;
   
   let characters = [];
 
@@ -8,14 +9,9 @@
     const response = await fetch("https://rickandmortyapi.com/api/character?page=1");
     const data = await response.json();
     characters = data.results;
-    console.log({route})
-  }
-  loadCharacter();
-
-  function didTap() {
-    console.log('aaaa');
   }
 
+loadCharacter();
 </script>
 
 <div class="lg:grid lg:grid-cols-2">
@@ -35,10 +31,10 @@
       </p>
       <svelte:fragment slot="footer">
         <div class="flex justify-end material:hidden">
-          <Link link href={`#${route.path}`}>정보 가져오기</Link>
+          <Link link href={`#${route.path}`}>{title}</Link>
         </div>
         <div class="flex justify-end ios:hidden space-x-2">
-          <Button rounded inline outline link href={'/pages/Scrap/ScrapInput.svelte'}>정보 가져오기</Button>
+          <Button rounded inline outline link href={`#${route.path}`}>{title}</Button>
         </div>
       </svelte:fragment>
     </Card>
