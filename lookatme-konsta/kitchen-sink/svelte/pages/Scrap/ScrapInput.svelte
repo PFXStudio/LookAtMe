@@ -11,14 +11,13 @@
     SegmentedButton,
     Button,
     BlockHeader,
-    Chip,
   } from "konsta/svelte";
 
   import DemoIcon from "../../components/DemoIcon.svelte";
+  import AuthTypeDescription from "./ScrapInputAuthTypeDescription.svelte";
+  import AuthTypeWrongDescription from "./ScrapInputAuthTypeWrongDescription.svelte";
 
   const isPreview = document.location.href.includes("examplePreview");
-  let wrongAuthChip = { fillBg: "bg-red-500", fillText: "text-white" };
-  let defaultAuthChip = { fillBg: "bg-white-500", fillText: "text-black" };
   let name = { value: "", changed: false };
   let email = { value: "", changed: false };
   let phone = { value: "", changed: false };
@@ -47,20 +46,23 @@
       name.changed = true;
       return;
     }
-    if (email.value.length <= 0) {
-      email.changed = true;
+    if (birthday.value.length <= 0) {
+      birthday.changed = true;
       return;
     }
     if (phone.value.length <= 0) {
       phone.changed = true;
       return;
     }
-    if (birthday.value.length <= 0) {
-      birthday.changed = true;
+    if (email.value.length <= 0) {
+      email.changed = true;
       return;
     }
     console.log(">>> good input");
   }
+
+  let abc = "<BlockHeader>간편인증(민간인증서)을 선택 해 주세요.</BlockHeader>";
+  let bbb = "h1";
 </script>
 
 <Page>
@@ -72,11 +74,13 @@
     </svelte:fragment>
   </Navbar>
 
-  <BlockTitle>민간인증서를 이용해 고객님의 회원 정보를 불러 올 거에요.</BlockTitle>
-  <BlockHeader
-  ><b>민간인증서를 선택 해 주세요.</b></BlockHeader
->
-  <Block strongIos outlineIos class="space-y-4">
+  <BlockTitle>간편인증(민간인증서)을 이용해 고객님의 회원 정보를 불러 올 거에요.</BlockTitle>
+  <Block>
+    <svelte:component
+    this={(authType.changed && !authType.value.trim()) ? AuthTypeWrongDescription : AuthTypeDescription}
+  />
+  <!-- </Block> -->
+  <!-- <Block strongIos outlineIos class="space-y-4"> -->
     <Segmented strong>
       <SegmentedButton
         strong
@@ -121,6 +125,9 @@
       type="date"
       defaultValue=""
       placeholder="2010-01-01"
+      error={birthday.changed && !birthday.value.trim()
+        ? "생년월일을 정학하게 입력 해 주세요."
+        : ""}
       onInput={onChangedBirthDay}
     >
       <DemoIcon slot="media" />
