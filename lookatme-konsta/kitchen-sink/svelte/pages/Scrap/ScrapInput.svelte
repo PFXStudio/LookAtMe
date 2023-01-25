@@ -11,18 +11,30 @@
     SegmentedButton,
     Button,
     BlockHeader,
+    Dialog,
+    DialogButton,
+    Preloader,
   } from "konsta/svelte";
 
   import DemoIcon from "../../components/DemoIcon.svelte";
+  import RequestScrap from "../../usecases/RequestScrap.svelte";
   import AuthTypeDescription from "./ScrapInputAuthTypeDescription.svelte";
   import AuthTypeWrongDescription from "./ScrapInputAuthTypeWrongDescription.svelte";
 
   const isPreview = document.location.href.includes("examplePreview");
-  let name = { value: "", changed: false };
-  let email = { value: "", changed: false };
-  let phone = { value: "", changed: false };
-  let birthday = { value: "", changed: false };
-  let authType = { value: "", changed: false };
+  let name = { value: "1", changed: false };
+  let email = { value: "1", changed: false };
+  let phone = { value: "1", changed: false };
+  let birthday = { value: "1999", changed: false };
+  let authType = { value: "1", changed: false };
+  let requestScrapInfo = {
+    parameter: undefined,
+    result: undefined,
+    errorMessage: undefined,
+    isError: false,
+    isLoading: false,
+  };
+  let requestScrap = undefined;
 
   const onChangedName = (e) => {
     name = { value: e.target.value, changed: true };
@@ -58,11 +70,17 @@
       email.changed = true;
       return;
     }
-    console.log(">>> good input");
-  }
 
-  let abc = "<BlockHeader>간편인증(민간인증서)을 선택 해 주세요.</BlockHeader>";
-  let bbb = "h1";
+    requestScrapInfo.parameter = {
+      authType: authType.value,
+      name: name.value,
+      birthday: birthday.value,
+      phone: phone.value,
+      email: email.value,
+    };
+    requestScrapInfo.isLoading = true;
+    requestScrap.request();
+  }
 </script>
 
 <Page>
@@ -77,10 +95,10 @@
   <BlockTitle>간편인증(민간인증서)을 이용해 고객님의 회원 정보를 불러 올 거에요.</BlockTitle>
   <Block>
     <svelte:component
-    this={(authType.changed && !authType.value.trim()) ? AuthTypeWrongDescription : AuthTypeDescription}
-  />
-  <!-- </Block> -->
-  <!-- <Block strongIos outlineIos class="space-y-4"> -->
+      this={authType.changed && !authType.value.trim()
+        ? AuthTypeWrongDescription
+        : AuthTypeDescription}
+    />
     <Segmented strong>
       <SegmentedButton
         strong
@@ -162,5 +180,35 @@
   </List>
   <Block outlineIos class="space-y-2">
     <Button large class="k-color-brand-yellow" onClick={didTapRequest}>정보 가져오기</Button>
+    <RequestScrap {requestScrapInfo} bind:this={requestScrap} />
   </Block>
+  <Dialog
+    opened={requestScrapInfo.isError}
+    onBackdropClick={() => {
+      requestScrapInfo.isError = false;
+      requestScrapInfo.isLoading = false;
+    }}
+  >
+    <svelte:fragment slot="title">간편인증에 실패했어요. 😭</svelte:fragment>
+    {requestScrapInfo.errorMessage}
+    <svelte:fragment slot="buttons">
+      <DialogButton
+        onClick={() => {
+          requestScrapInfo.parameter = undefined;
+          requestScrapInfo.result = undefined;
+          requestScrapInfo.errorMessage = undefined;
+          requestScrapInfo.isError = false;
+          requestScrapInfo.isLoading = false;
+        }}
+      >
+        확인
+      </DialogButton>
+    </svelte:fragment>
+  </Dialog>
+  <Dialog opened={requestScrapInfo.isLoading} backdrop=false>
+    <svelte:fragment slot="title">정보를 불러오는 중이에요...</svelte:fragment>
+    <Block class="text-center">
+      <Preloader/>
+    </Block>
+  </Dialog>
 </Page>
