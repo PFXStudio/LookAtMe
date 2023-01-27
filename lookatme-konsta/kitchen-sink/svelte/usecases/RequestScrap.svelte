@@ -1,7 +1,7 @@
 <script>
     import { Card, Link, Button } from "konsta/svelte";
     export let requestScrapInfo = undefined;
-    export async function request() {
+    export async function request(resultHandler) {
       let value = requestScrapInfo.parameter.name;
       console.log({value})
       const response = await fetch("https://rickandmortyapi.com/api/character?page=1");
@@ -10,6 +10,7 @@
       requestScrapInfo.errorMessage = "입력한 정보와 간편인증(민간인증서)을 확인 해 주세요.";
       requestScrapInfo.isError = true;
       console.log(requestScrapInfo.isError)
+      resultHandler()
 	}
 
 </script>

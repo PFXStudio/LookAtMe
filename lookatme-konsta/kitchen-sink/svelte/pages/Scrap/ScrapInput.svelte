@@ -11,6 +11,7 @@
     SegmentedButton,
     Button,
     BlockHeader,
+    BlockFooter,
     Dialog,
     DialogButton,
     Preloader,
@@ -20,6 +21,8 @@
   import RequestScrap from "../../usecases/RequestScrap.svelte";
   import AuthTypeDescription from "./ScrapInputAuthTypeDescription.svelte";
   import AuthTypeWrongDescription from "./ScrapInputAuthTypeWrongDescription.svelte";
+  import { Circle3 } from "svelte-loading-spinners";
+  import routes from "../../routes.js";
 
   const isPreview = document.location.href.includes("examplePreview");
   let name = { value: "1", changed: false };
@@ -29,12 +32,12 @@
   let authType = { value: "1", changed: false };
   let requestScrapInfo = {
     parameter: undefined,
+    status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
-    isError: false,
-    isLoading: false,
   };
   let requestScrap = undefined;
+  let loader = undefined;
 
   const onChangedName = (e) => {
     name = { value: e.target.value, changed: true };
@@ -78,8 +81,16 @@
       phone: phone.value,
       email: email.value,
     };
-    requestScrapInfo.isLoading = true;
-    requestScrap.request();
+    requestScrapInfo.status = "loading";
+    requestScrap.request(() => {
+      console.log("callback");
+      if (requestScrapInfo.result !== undefined) {
+        requestScrapInfo.status = "success";
+        routes.filter
+      } else {
+        requestScrapInfo.status = "failed";
+      }
+    });
   }
 </script>
 
@@ -182,13 +193,7 @@
     <Button large class="k-color-brand-yellow" onClick={didTapRequest}>정보 가져오기</Button>
     <RequestScrap {requestScrapInfo} bind:this={requestScrap} />
   </Block>
-  <Dialog
-    opened={requestScrapInfo.isError}
-    onBackdropClick={() => {
-      requestScrapInfo.isError = false;
-      requestScrapInfo.isLoading = false;
-    }}
-  >
+  <Dialog opened={requestScrapInfo.status === "failed"} backdrop="false">
     <svelte:fragment slot="title">간편인증에 실패했어요. 😭</svelte:fragment>
     {requestScrapInfo.errorMessage}
     <svelte:fragment slot="buttons">
@@ -196,19 +201,35 @@
         onClick={() => {
           requestScrapInfo.parameter = undefined;
           requestScrapInfo.result = undefined;
+          requestScrapInfo.status = undefined;
           requestScrapInfo.errorMessage = undefined;
-          requestScrapInfo.isError = false;
-          requestScrapInfo.isLoading = false;
+          // TODO : stop
         }}
       >
         확인
       </DialogButton>
     </svelte:fragment>
   </Dialog>
-  <Dialog opened={requestScrapInfo.isLoading} backdrop=false>
+  <Dialog opened={requestScrapInfo.status === "loading"} backdrop="false">
     <svelte:fragment slot="title">정보를 불러오는 중이에요...</svelte:fragment>
-    <Block class="text-center">
-      <Preloader/>
-    </Block>
+    <Block />
+    <BlockFooter class="flex justify-center space-y-4">
+      <Circle3 size="45" color="#007bff" unit="px" duration="1.5s" bind:this={loader} />
+    </BlockFooter>
+  </Dialog>
+  <Dialog opened={requestScrapInfo.status === "success"} backdrop="false">
+    <svelte:fragment slot="title">사용자님의 정보를 정상적으로 불러 왔어요. 🙂</svelte:fragment>
+    {"내 정보내 정보내 정보내 정보내 정보내 정보"}
+    <svelte:fragment slot="buttons">
+      <DialogButton
+        onClick={() => {
+          // TODO : route signUp.
+          let route = `#${routes.filter((route) => route.title == "Profile Setup")[0].path}`;
+          console.log({route});
+        }}
+      >
+        확인
+      </DialogButton>
+    </svelte:fragment>
   </Dialog>
 </Page>

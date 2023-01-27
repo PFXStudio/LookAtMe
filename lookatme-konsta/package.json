@@ -52,6 +52,8 @@
     "vite": "^3.1.0"
   },
   "dependencies": {
-    "konsta": "file:src"
+    "konsta": "file:src",
+    "svelte-loading-spinners": "^0.3.4",
+    "svelte-spa-router": "^3.3.0"
   }
 }
