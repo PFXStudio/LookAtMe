@@ -14,15 +14,15 @@
     BlockFooter,
     Dialog,
     DialogButton,
-    Preloader,
   } from "konsta/svelte";
 
   import DemoIcon from "../../components/DemoIcon.svelte";
   import RequestScrap from "../../usecases/RequestScrap.svelte";
   import AuthTypeDescription from "./ScrapInputAuthTypeDescription.svelte";
   import AuthTypeWrongDescription from "./ScrapInputAuthTypeWrongDescription.svelte";
-  import { Circle3 } from "svelte-loading-spinners";
   import routes from "../../routes.js";
+  import SpinLoader from "../Commons/SpinLoader.svelte";
+  import { push, pop, replace } from "svelte-spa-router";
 
   const isPreview = document.location.href.includes("examplePreview");
   let name = { value: "1", changed: false };
@@ -86,7 +86,7 @@
       console.log("callback");
       if (requestScrapInfo.result !== undefined) {
         requestScrapInfo.status = "success";
-        routes.filter
+        routes.filter;
       } else {
         requestScrapInfo.status = "failed";
       }
@@ -213,19 +213,18 @@
   <Dialog opened={requestScrapInfo.status === "loading"} backdrop="false">
     <svelte:fragment slot="title">정보를 불러오는 중이에요...</svelte:fragment>
     <Block />
-    <BlockFooter class="flex justify-center space-y-4">
-      <Circle3 size="45" color="#007bff" unit="px" duration="1.5s" bind:this={loader} />
-    </BlockFooter>
+    <SpinLoader {loader} />
   </Dialog>
+
   <Dialog opened={requestScrapInfo.status === "success"} backdrop="false">
     <svelte:fragment slot="title">사용자님의 정보를 정상적으로 불러 왔어요. 🙂</svelte:fragment>
     {"내 정보내 정보내 정보내 정보내 정보내 정보"}
     <svelte:fragment slot="buttons">
       <DialogButton
         onClick={() => {
-          // TODO : route signUp.
           let route = `#${routes.filter((route) => route.title == "Profile Setup")[0].path}`;
-          console.log({route});
+          console.log({ route });
+          replace(route);
         }}
       >
         확인
