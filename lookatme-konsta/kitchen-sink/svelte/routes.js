@@ -30,6 +30,8 @@ import Toggle from './pages/Toggle.svelte';
 import Toolbar from './pages/Toolbar.svelte';
 import LookerTab from './pages/LookerTab/LookerTab.svelte';
 import ProfileSetup from './pages/ProfileSetup/ProfileSetup.svelte';
+import ProfileSetupSelect from './pages/ProfileSetup/ProfileSetupSelect.svelte';
+import ProfilePreView from './pages/ProfilePreView/ProfilePreView.svelte';
 import Main from './pages/Main/Main.svelte';
 import ScrapInput from './pages/Scrap/ScrapInput.svelte';
 
@@ -37,6 +39,8 @@ const pages = {
   Main,
   LookerTab,
   ProfileSetup,
+  ProfileSetupSelect,
+  ProfilePreView,
   ActionSheet,
   Badge,
   Breadcrumbs,
