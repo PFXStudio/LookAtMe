@@ -16,14 +16,22 @@
   } from "konsta/svelte";
 
   import routes from "../../routes.js";
-  import { push, pop, replace } from "svelte-spa-router";
+  import {
+    location, // /bla/blabla/route
+    querystring, // /bla?Location=Artworld
+    push,
+    pop,
+    replace,
+    link,
+  } from "svelte-spa-router";
+  import { parse, stringify } from 'qs';
 
   const isPreview = document.location.href.includes("examplePreview");
   export let requestProfileSetupInfo = {
     parameter: {
-      nickname: undefined,  
-      region: undefined,  
-      job: undefined,  
+      nickname: undefined,
+      region: undefined,
+      job: undefined,
       introduce: undefined,
       tall: undefined,
       education: undefined,
@@ -37,6 +45,20 @@
     result: undefined,
     errorMessage: undefined,
   };
+
+  $: parsedQuery = parse($querystring) ?? {};
+
+  // Set someVariableStore if found in query param
+  $: {
+    let parameter = parsedQuery.parameter;
+    if (parameter) {
+      requestProfileSetupInfo.parameter = parameter;
+    }
+  }
+
+  console.log(">>> parameter");
+  console.log({requestProfileSetupInfo});
+
   let tall = { value: "1", changed: false };
   let education = { value: "1", changed: false, title: "최종학력" };
   let body = { value: "1", changed: false, title: "체형" };
@@ -89,9 +111,13 @@
     requestProfileSetupInfo.parameter.drink = drink.value;
     requestProfileSetupInfo.parameter.smoking = smoking.value;
 
-    let route = `#${routes.filter((route) => route.title == "Profile Pre View")[0].path}`;
+    let parsedQuery = parse(requestProfileSetupInfo) ?? {};
+    console.log('>>> parsedQuery');
+    console.log(parsedQuery);
+    let route = routes.filter((route) => route.title == "Profile Pre View")[0];
+    console.log('>>> route');
     console.log(route);
-    push(route);
+    push(`${route.path}?${stringify(parsedQuery)}`);
   }
 </script>
 

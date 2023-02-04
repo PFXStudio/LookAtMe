@@ -15,7 +15,15 @@
   import RequestProfileSetup from "../../usecases/RequestProfileSetup.svelte";
   import routes from "../../routes.js";
   import SpinLoader from "../Commons/SpinLoader.svelte";
-  import { push, pop, replace } from "svelte-spa-router";
+  import Router, {
+    location, // /bla/blabla/route
+    querystring, // /bla?Location=Artworld
+    push,
+    pop,
+    link,
+  } from "svelte-spa-router";
+
+  import { parse, stringify } from "qs";
 
   const isPreview = document.location.href.includes("examplePreview");
   export let requestProfileSetupInfo = {
@@ -36,6 +44,20 @@
     result: undefined,
     errorMessage: undefined,
   };
+
+  $: parsedQuery = parse($querystring) ?? {};
+
+  // Set someVariableStore if found in query param
+  $: {
+    let parameter = parsedQuery.parameter;
+    if (parameter) {
+      requestProfileSetupInfo.parameter = parameter;
+    }
+  }
+
+  console.log(">>> parameter");
+  console.log({requestProfileSetupInfo});
+
   let requestProfileSetup = undefined;
   let loader = undefined;
   console.log(requestProfileSetupInfo);

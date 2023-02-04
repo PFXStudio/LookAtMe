@@ -12,18 +12,31 @@
 
   import DemoIcon from "../../components/DemoIcon.svelte";
   import routes from "../../routes.js";
-  import { push, pop, replace } from "svelte-spa-router";
+  import {
+    location, // /bla/blabla/route
+    querystring, // /bla?Location=Artworld
+    push,
+    pop,
+    replace,
+    link,
+  } from "svelte-spa-router";
+  import { parse, stringify } from 'qs';
 
   const isPreview = document.location.href.includes("examplePreview");
   let nickname = { value: "1", changed: false };
   let region = { value: "1", changed: false };
   let job = { value: "1999", changed: false };
-  let introduce = { value: "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", changed: false };
+  let introduce = {
+    value:
+      "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+    changed: false,
+  };
+  let route = undefined;
   export let requestProfileSetupInfo = {
     parameter: {
-      nickname: undefined,  
-      region: undefined,  
-      job: undefined,  
+      nickname: undefined,
+      region: undefined,
+      job: undefined,
       introduce: undefined,
       tall: undefined,
       education: undefined,
@@ -71,10 +84,11 @@
     requestProfileSetupInfo.parameter.region = region.value;
     requestProfileSetupInfo.parameter.job = job.value;
     requestProfileSetupInfo.parameter.introduce = introduce.value;
-    
-    let route = `#${routes.filter((route) => route.title == "Profile Setup Select")[0].path}`;
-    console.log(route);
-    push(route);
+
+    let parsedQuery = parse(requestProfileSetupInfo) ?? {};
+    route = routes.filter((route) => route.title == "Profile Setup Select")[0];
+    push(`${route.path}?${stringify(parsedQuery)}`);
+    console.log(`${route.path}?${stringify(parsedQuery)}`);
   }
 </script>
 
