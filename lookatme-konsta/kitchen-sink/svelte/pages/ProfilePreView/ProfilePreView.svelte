@@ -9,12 +9,16 @@
     Dialog,
     DialogButton,
     ListItem,
+    Icon,
+    TabbarLink,
   } from "konsta/svelte";
 
   import DemoIcon from "../../components/DemoIcon.svelte";
   import RequestProfileSetup from "../../usecases/RequestProfileSetup.svelte";
   import routes from "../../routes.js";
   import SpinLoader from "../Commons/SpinLoader.svelte";
+  import PinMapFillIcon from "../../components/Icons/PinMapFillIcon.svelte";
+  const test = `data:image/svg+xml,${encodeURIComponent(PinMapFillIcon)}`;
   import Router, {
     location, // /bla/blabla/route
     querystring, // /bla?Location=Artworld
@@ -56,7 +60,7 @@
   }
 
   console.log(">>> parameter");
-  console.log({requestProfileSetupInfo});
+  console.log({ requestProfileSetupInfo });
 
   let requestProfileSetup = undefined;
   let loader = undefined;
@@ -84,15 +88,20 @@
   </Navbar>
 
   <List strongIos outlineIos>
-    <ListItem title="별명" after={requestProfileSetupInfo.parameter.nickname}>
-      <DemoIcon slot="media" />
-    </ListItem>
+    <ListItem title="별명" after={requestProfileSetupInfo.parameter.nickname} />
     <ListItem title="키" after={requestProfileSetupInfo.parameter.tall}>
       <DemoIcon slot="media" />
     </ListItem>
-    <ListItem title="지역" after={requestProfileSetupInfo.parameter.region}>
-      <DemoIcon slot="media" />
-    </ListItem>
+    <div class="flex flex-row items-center ml-4 mr-4 text-[16px]">
+      <Icon slot="icon">
+        <PinMapFillIcon slot="ios" class="w-7 h-7" />
+        <PinMapFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="flex flex-row justify-between items-center text-[16px] w-full">
+        <ListItem title="지역" after={requestProfileSetupInfo.parameter.region} />
+      </div>
+    </div>
+
     <ListItem title="직업" after={requestProfileSetupInfo.parameter.job}>
       <DemoIcon slot="media" />
     </ListItem>

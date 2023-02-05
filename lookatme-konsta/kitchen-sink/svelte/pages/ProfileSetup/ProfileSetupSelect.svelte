@@ -59,6 +59,8 @@
   console.log(">>> parameter");
   console.log({requestProfileSetupInfo});
 
+  let regionList = ["서울특별시", "경기도", "대전", "대구", "부산"];
+  let region = { value: "서울특별시", changed: false, title: "지역" };
   let tall = { value: "1", changed: false };
   let education = { value: "1", changed: false, title: "최종학력" };
   let body = { value: "1", changed: false, title: "체형" };
@@ -66,6 +68,7 @@
   let religion = { value: "1", changed: false, title: "종교" };
   let drink = { value: "1", changed: false, title: "음주" };
   let smoking = { value: "1", changed: false, title: "흡연" };
+  let didTapRegionButton = false;
   let didTapEducationButton = false;
   let didTapBodyButton = false;
   let didTapBloodButton = false;
@@ -74,6 +77,10 @@
   let didTapSmokingButton = false;
 
   function didTapNext() {
+    if (region.value.length <= 0) {
+      region.changed = true;
+      return;
+    }
     if (tall.value.length <= 0) {
       tall.changed = true;
       return;
@@ -103,6 +110,7 @@
       return;
     }
 
+    requestProfileSetupInfo.parameter.region = region.value;
     requestProfileSetupInfo.parameter.tall = tall.value;
     requestProfileSetupInfo.parameter.education = education.value;
     requestProfileSetupInfo.parameter.body = body.value;
@@ -131,29 +139,38 @@
   </Navbar>
 
   <BlockTitle>룩커에게 보여질 프로필 정보를 설정 해 주세요.</BlockTitle>
+  <BlockHeader
+  >{tall.changed && !tall.value.trim()
+    ? "키를 정학하게 설정 해 주세요."
+    : "키를 설정 해 주세요."}
+  {tall.value}cm
+</BlockHeader>
+<List strong insetMaterial outlineIos>
+  <ListItem innerClass="flex space-x-4">
+    <svelte:fragment slot="inner">
+      <span>100cm</span>
+      <Range
+        value={tall.value}
+        step={1}
+        min={100}
+        max={230}
+        onInput={(e) => (tall.value = e.target.value)}
+      />
+      <span>230cm</span>
+    </svelte:fragment>
+  </ListItem>
+</List>
 
   <List strongIos insetIos>
     <BlockHeader
-      >{tall.changed && !tall.value.trim()
-        ? "키를 정학하게 설정 해 주세요."
-        : "키를 설정 해 주세요."}
-      {tall.value}cm
-    </BlockHeader>
-    <List strong insetMaterial outlineIos>
-      <ListItem innerClass="flex space-x-4">
-        <svelte:fragment slot="inner">
-          <span>100cm</span>
-          <Range
-            value={tall.value}
-            step={1}
-            min={100}
-            max={230}
-            onInput={(e) => (tall.value = e.target.value)}
-          />
-          <span>230cm</span>
-        </svelte:fragment>
-      </ListItem>
-    </List>
+      >{region.changed && !region.value.trim()
+        ? "지역을 정학하게 입력 해 주세요."
+        : "지역을 입력 해 주세요."}</BlockHeader
+    >
+
+    <Block strong inset class="flex space-x-4">
+      <Button onClick={() => (didTapRegionButton = true)}>{region.title}</Button>
+    </Block>
 
     <BlockHeader
       >{education.changed && !education.value.trim()
@@ -219,6 +236,24 @@
       <Button large class="k-color-brand-yellow" onClick={didTapNext}>다음</Button>
     </Block>
   </List>
+
+  <Actions opened={didTapRegionButton} backdrop="false">
+    <ActionsGroup>
+      {#each regionList as item}
+      <ActionsButton
+        onClick={() => {
+          didTapRegionButton = false;
+          console.log(item);
+          region = { value: item, changed: true, title: item };
+        }}
+      >
+        {item}
+      </ActionsButton>
+      {/each}
+    </ActionsGroup>
+  </Actions>
+
+
   <Actions opened={didTapBodyButton} backdrop="false">
     <ActionsGroup>
       <ActionsButton

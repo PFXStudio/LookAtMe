@@ -8,6 +8,7 @@
     ListInput,
     Block,
     Button,
+    ListItem,
   } from "konsta/svelte";
 
   import DemoIcon from "../../components/DemoIcon.svelte";
@@ -20,12 +21,12 @@
     replace,
     link,
   } from "svelte-spa-router";
-  import { parse, stringify } from 'qs';
+  import { parse, stringify } from "qs";
+  import BlockHeader from "../../../../src/svelte/components/BlockHeader.svelte";
 
   const isPreview = document.location.href.includes("examplePreview");
-  let nickname = { value: "1", changed: false };
-  let region = { value: "1", changed: false };
-  let job = { value: "1999", changed: false };
+  let nickname = { value: "레인", changed: false };
+  let job = { value: "개발자", changed: false };
   let introduce = {
     value:
       "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -53,22 +54,16 @@
   const onChangedNickname = (e) => {
     nickname = { value: e.target.value, changed: true };
   };
-  const onChangedRegion = (e) => {
-    region = { value: e.target.value, changed: true };
-  };
   const onChangedJob = (e) => {
     job = { value: e.target.value, changed: true };
   };
   const onChangedIntroduce = (e) => {
     introduce = { value: e.target.value, changed: true };
   };
+
   function didTapNext() {
     if (nickname.value.length <= 0) {
       nickname.changed = true;
-      return;
-    }
-    if (region.value.length <= 0) {
-      region.changed = true;
       return;
     }
     if (job.value.length <= 0) {
@@ -81,7 +76,6 @@
     }
 
     requestProfileSetupInfo.parameter.nickname = nickname.value;
-    requestProfileSetupInfo.parameter.region = region.value;
     requestProfileSetupInfo.parameter.job = job.value;
     requestProfileSetupInfo.parameter.introduce = introduce.value;
 
@@ -104,31 +98,28 @@
   <BlockTitle>룩커에게 보여질 프로필 정보를 설정 해 주세요.</BlockTitle>
 
   <List strongIos insetIos>
-    <ListInput
-      outline
-      label="별명"
-      type="text"
-      placeholder="별명을 입력 해 주세요."
-      value={nickname.value}
-      error={nickname.changed && !nickname.value.trim() ? "별명을 정학하게 입력 해 주세요." : ""}
-      onInput={onChangedNickname}
-    >
-      <DemoIcon slot="media" />
-    </ListInput>
+    <div class="flex flex-row items-center">
+      <ListInput
+        outline
+        label="별명"
+        type="text"
+        placeholder="별명을 입력 해 주세요."
+        value={nickname.value}
+        error={nickname.changed && !nickname.value.trim() ? "별명을 정학하게 입력 해 주세요." : ""}
+        onInput={onChangedNickname}
+        class="w-full grow-1"
+      >
+        <DemoIcon slot="media" />
+      </ListInput>
+      <Button class="mr-4 demo-container" small="true" raised="true" tonal>중복 확인</Button>
+    </div>
 
-    <BlockTitle />
-
-    <ListInput
-      outline
-      label="지역"
-      type="text"
-      placeholder="지역을 입력 해 주세요."
-      value={region.value}
-      error={region.changed && !region.value.trim() ? "지역을 정학하게 입력 해 주세요." : ""}
-      onInput={onChangedRegion}
-    >
-      <DemoIcon slot="media" />
-    </ListInput>
+    <style>
+      .demo-container {
+        max-width: 100px;
+        width: 100px;
+      }
+    </style>
 
     <ListInput
       outline
