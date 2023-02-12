@@ -34,7 +34,7 @@
       job: undefined,
       introduce: undefined,
       tall: undefined,
-      education: undefined,
+      graduation: undefined,
       body: undefined,
       blood: undefined,
       religion: undefined,
@@ -62,14 +62,14 @@
   let regionList = ["서울특별시", "경기도", "대전", "대구", "부산"];
   let region = { value: "서울특별시", changed: false, title: "지역" };
   let tall = { value: "1", changed: false };
-  let education = { value: "1", changed: false, title: "최종학력" };
+  let graduation = { value: "1", changed: false, title: "최종학력" };
   let body = { value: "1", changed: false, title: "체형" };
   let blood = { value: "1", changed: false, title: "혈액형" };
   let religion = { value: "1", changed: false, title: "종교" };
   let drink = { value: "1", changed: false, title: "음주" };
   let smoking = { value: "1", changed: false, title: "흡연" };
   let didTapRegionButton = false;
-  let didTapEducationButton = false;
+  let didTapgraduationButton = false;
   let didTapBodyButton = false;
   let didTapBloodButton = false;
   let didTapReligionButton = false;
@@ -85,8 +85,8 @@
       tall.changed = true;
       return;
     }
-    if (education.value.length <= 0) {
-      education.changed = true;
+    if (graduation.value.length <= 0) {
+      graduation.changed = true;
       return;
     }
     if (body.value.length <= 0) {
@@ -112,7 +112,7 @@
 
     requestProfileSetupInfo.parameter.region = region.value;
     requestProfileSetupInfo.parameter.tall = tall.value;
-    requestProfileSetupInfo.parameter.education = education.value;
+    requestProfileSetupInfo.parameter.graduation = graduation.value;
     requestProfileSetupInfo.parameter.body = body.value;
     requestProfileSetupInfo.parameter.blood = blood.value;
     requestProfileSetupInfo.parameter.religion = religion.value;
@@ -173,13 +173,13 @@
     </Block>
 
     <BlockHeader
-      >{education.changed && !education.value.trim()
+      >{graduation.changed && !graduation.value.trim()
         ? "최종학력을 정학하게 입력 해 주세요."
         : "최종학력을 입력 해 주세요."}</BlockHeader
     >
 
     <Block strong inset class="flex space-x-4">
-      <Button onClick={() => (didTapEducationButton = true)}>{education.title}</Button>
+      <Button onClick={() => (didTapgraduationButton = true)}>{graduation.title}</Button>
     </Block>
 
     <BlockHeader
@@ -344,44 +344,44 @@
     </ActionsGroup>
   </Actions>
 
-  <Actions opened={didTapEducationButton} backdrop="false">
+  <Actions opened={didTapgraduationButton} backdrop="false">
     <ActionsGroup>
       <ActionsButton
         onClick={() => {
-          didTapEducationButton = false;
-          education = { value: "대학교 재학", changed: true, title: "대학교 재학" };
+          didTapgraduationButton = false;
+          graduation = { value: "대학교 재학", changed: true, title: "대학교 재학" };
         }}
       >
         대학교 재학
       </ActionsButton>
       <ActionsButton
         onClick={() => {
-          didTapEducationButton = false;
-          education = { value: "대학교 졸업", changed: true, title: "대학교 졸업" };
+          didTapgraduationButton = false;
+          graduation = { value: "대학교 졸업", changed: true, title: "대학교 졸업" };
         }}
       >
         대학교 졸업
       </ActionsButton>
       <ActionsButton
         onClick={() => {
-          didTapEducationButton = false;
-          education = { value: "대학원 재학", changed: true, title: "대학원 재학" };
+          didTapgraduationButton = false;
+          graduation = { value: "대학원 재학", changed: true, title: "대학원 재학" };
         }}
       >
         대학원 재학
       </ActionsButton>
       <ActionsButton
         onClick={() => {
-          didTapEducationButton = false;
-          education = { value: "대학원 졸업", changed: true, title: "대학원 졸업" };
+          didTapgraduationButton = false;
+          graduation = { value: "대학원 졸업", changed: true, title: "대학원 졸업" };
         }}
       >
         대학원 졸업
       </ActionsButton>
       <ActionsButton
         onClick={() => {
-          didTapEducationButton = false;
-          education = { value: "기타", changed: true, title: "기타" };
+          didTapgraduationButton = false;
+          graduation = { value: "기타", changed: true, title: "기타" };
         }}
       >
         기타

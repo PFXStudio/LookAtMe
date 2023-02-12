@@ -9,9 +9,11 @@
     Block,
     Button,
     ListItem,
+    Dialog,
   } from "konsta/svelte";
 
   import DemoIcon from "../../components/DemoIcon.svelte";
+  import SpinLoader from "../Commons/SpinLoader.svelte";
   import routes from "../../routes.js";
   import {
     location, // /bla/blabla/route
@@ -23,9 +25,10 @@
   } from "svelte-spa-router";
   import { parse, stringify } from "qs";
   import BlockHeader from "../../../../src/svelte/components/BlockHeader.svelte";
+  import RequestCheckNickname from "../../usecases/RequestCheckNickname.svelte";
 
   const isPreview = document.location.href.includes("examplePreview");
-  let nickname = { value: "레인", changed: false };
+  let nickname = { value: "", changed: false, checkNickname: false };
   let job = { value: "개발자", changed: false };
   let introduce = {
     value:
@@ -33,6 +36,7 @@
     changed: false,
   };
   let route = undefined;
+  let loader = undefined;
   export let requestProfileSetupInfo = {
     parameter: {
       nickname: undefined,
@@ -40,7 +44,7 @@
       job: undefined,
       introduce: undefined,
       tall: undefined,
-      education: undefined,
+      graduation: undefined,
       body: undefined,
       blood: undefined,
       religion: undefined,
@@ -52,7 +56,8 @@
     errorMessage: undefined,
   };
   const onChangedNickname = (e) => {
-    nickname = { value: e.target.value, changed: true };
+    errorMessageNickname = "";
+    nickname = { value: e.target.value, changed: true, checkNickname: false };
   };
   const onChangedJob = (e) => {
     job = { value: e.target.value, changed: true };
@@ -61,11 +66,66 @@
     introduce = { value: e.target.value, changed: true };
   };
 
-  function didTapNext() {
+  let errorMessageNickname = "";
+  function validNickname() {
+    if (nickname.changed == false) {
+      errorMessageNickname = "별명을 정학하게 입력 해 주세요.";
+      return;
+    }
+    if (nickname.changed && !nickname.value.trim()) {
+      errorMessageNickname = "별명을 정학하게 입력 해 주세요.";
+      return;
+    }
+
+    if (nickname.checkNickname == false) {
+      errorMessageNickname = "별명 중복확인을 해 주세요.";
+      return;
+    }
+
+    return errorMessageNickname;
+  }
+
+  let requestCheckNickname = undefined;
+  let requestCheckNicknameInfo = {
+    parameter: {
+      nickname: undefined,
+    },
+    status: undefined, // success, failed, loading
+    result: undefined,
+    errorMessage: undefined,
+  };
+
+  function didTapCheckNickname() {
     if (nickname.value.length <= 0) {
       nickname.changed = true;
       return;
     }
+
+    requestCheckNicknameInfo.parameter.nickname = nickname.value;
+    requestCheckNicknameInfo.status = "loading";
+    requestCheckNickname.request(() => {
+      if (requestCheckNicknameInfo.result !== undefined) {
+        requestCheckNicknameInfo.status = "success";
+        errorMessageNickname = '';
+        nickname.changed = true;
+        nickname.checkNickname = true;
+      } else {
+        console.log(">>> received checkNickname");
+        requestCheckNicknameInfo.status = "failed";
+        errorMessageNickname = "이미 사용 중인 별명이에요.";
+        nickname.changed = true;
+        nickname.checkNickname = false;
+      }
+    });
+  }
+
+  function didTapNext() {
+    validNickname();
+    if (errorMessageNickname.length > 0) {
+      nickname.changed = true;
+      return;
+    }
+
     if (job.value.length <= 0) {
       job.changed = true;
       return;
@@ -105,13 +165,20 @@
         type="text"
         placeholder="별명을 입력 해 주세요."
         value={nickname.value}
-        error={nickname.changed && !nickname.value.trim() ? "별명을 정학하게 입력 해 주세요." : ""}
+        error={errorMessageNickname}
         onInput={onChangedNickname}
         class="w-full grow-1"
       >
         <DemoIcon slot="media" />
       </ListInput>
-      <Button class="mr-4 demo-container" small="true" raised="true" tonal>중복 확인</Button>
+      <Button
+        class="mr-4 demo-container"
+        small="true"
+        raised="true"
+        tonal
+        onClick={didTapCheckNickname}>중복 확인</Button
+      >
+      <RequestCheckNickname {requestCheckNicknameInfo} bind:this={requestCheckNickname} />
     </div>
 
     <style>
@@ -150,4 +217,10 @@
   <Block outlineIos class="space-y-2">
     <Button large class="k-color-brand-yellow" onClick={didTapNext}>다음</Button>
   </Block>
+
+  <Dialog opened={requestCheckNicknameInfo.status === "loading"} backdrop="false">
+    <svelte:fragment slot="title">정보를 요청하는 중이에요...</svelte:fragment>
+    <Block />
+    <SpinLoader {loader} />
+  </Dialog>
 </Page>

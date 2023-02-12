@@ -17,8 +17,18 @@
   import RequestProfileSetup from "../../usecases/RequestProfileSetup.svelte";
   import routes from "../../routes.js";
   import SpinLoader from "../Commons/SpinLoader.svelte";
-  import PinMapFillIcon from "../../components/Icons/PinMapFillIcon.svelte";
-  const test = `data:image/svg+xml,${encodeURIComponent(PinMapFillIcon)}`;
+  import BloodFillIcon from "../../components/Icons/BloodFillIcon.svelte";
+  import BodyFillIcon from "../../components/Icons/BodyFillIcon.svelte";
+  import DrinkFillIcon from "../../components/Icons/DrinkFillIcon.svelte";
+  import GraduationFillIcon from "../../components/Icons/GraduationFillIcon.svelte";
+  import IntroduceFillIcon from "../../components/Icons/IntroduceFillIcon.svelte";
+  import JobFillIcon from "../../components/Icons/JobFillIcon.svelte";
+  import NicknameFillIcon from "../../components/Icons/NicknameFillIcon.svelte";
+  import RegionFillIcon from "../../components/Icons/RegionFillIcon.svelte";
+  import ReligionFillIcon from "../../components/Icons/ReligionFillIcon.svelte";
+  import SmokingFillIcon from "../../components/Icons/SmokingFillIcon.svelte";
+  import TallFillIcon from "../../components/Icons/TallFillIcon.svelte";
+
   import Router, {
     location, // /bla/blabla/route
     querystring, // /bla?Location=Artworld
@@ -37,7 +47,7 @@
       job: undefined,
       introduce: undefined,
       tall: undefined,
-      education: undefined,
+      graduation: undefined,
       body: undefined,
       blood: undefined,
       religion: undefined,
@@ -88,44 +98,115 @@
   </Navbar>
 
   <List strongIos outlineIos>
-    <ListItem title="별명" after={requestProfileSetupInfo.parameter.nickname} />
-    <ListItem title="키" after={requestProfileSetupInfo.parameter.tall}>
-      <DemoIcon slot="media" />
-    </ListItem>
-    <div class="flex flex-row items-center ml-4 mr-4 text-[16px]">
+    <div class="flex items-center ml-4 mr-4 w-full">
       <Icon slot="icon">
-        <PinMapFillIcon slot="ios" class="w-7 h-7" />
-        <PinMapFillIcon slot="material" class="w-6 h-6" />
+        <NicknameFillIcon slot="ios" class="w-7 h-7" />
+        <NicknameFillIcon slot="material" class="w-6 h-6" />
       </Icon>
-      <div class="flex flex-row justify-between items-center text-[16px] w-full">
+      <div class="w-full mr-4">
+        <ListItem title="별명" after={requestProfileSetupInfo.parameter.nickname} />
+      </div>
+    </div>
+
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <TallFillIcon slot="ios" class="w-7 h-7" />
+        <TallFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="키" after={requestProfileSetupInfo.parameter.tall} />
+        </div>
+    </div>
+
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <RegionFillIcon slot="ios" class="w-7 h-7" />
+        <RegionFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
         <ListItem title="지역" after={requestProfileSetupInfo.parameter.region} />
       </div>
     </div>
 
-    <ListItem title="직업" after={requestProfileSetupInfo.parameter.job}>
-      <DemoIcon slot="media" />
-    </ListItem>
-    <ListItem title="최종학력" after={requestProfileSetupInfo.parameter.education}>
-      <DemoIcon slot="media" />
-    </ListItem>
-    <ListItem title="체형" after={requestProfileSetupInfo.parameter.body}>
-      <DemoIcon slot="media" />
-    </ListItem>
-    <ListItem title="혈액형" after={requestProfileSetupInfo.parameter.blood}>
-      <DemoIcon slot="media" />
-    </ListItem>
-    <ListItem title="종교" after={requestProfileSetupInfo.parameter.religion}>
-      <DemoIcon slot="media" />
-    </ListItem>
-    <ListItem title="음주" after={requestProfileSetupInfo.parameter.drink}>
-      <DemoIcon slot="media" />
-    </ListItem>
-    <ListItem title="흡연" after={requestProfileSetupInfo.parameter.smoking}>
-      <DemoIcon slot="media" />
-    </ListItem>
-    <ListItem title="자기소개" after={requestProfileSetupInfo.parameter.introduce}>
-      <DemoIcon slot="media" />
-    </ListItem>
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <JobFillIcon slot="ios" class="w-7 h-7" />
+        <JobFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="직업" after={requestProfileSetupInfo.parameter.job} />
+        </div>
+    </div>
+
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <GraduationFillIcon slot="ios" class="w-7 h-7" />
+        <GraduationFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="최종학력" after={requestProfileSetupInfo.parameter.graduation} />
+        </div>
+    </div>
+
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <BodyFillIcon slot="ios" class="w-7 h-7" />
+        <BodyFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="체형" after={requestProfileSetupInfo.parameter.body} />
+        </div>
+    </div>
+
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <BloodFillIcon slot="ios" class="w-7 h-7" />
+        <BloodFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="혈액형" after={requestProfileSetupInfo.parameter.blood} />
+        </div>
+    </div>
+
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <ReligionFillIcon slot="ios" class="w-7 h-7" />
+        <ReligionFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="종교" after={requestProfileSetupInfo.parameter.religion} />
+        </div>
+    </div>
+
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <DrinkFillIcon slot="ios" class="w-7 h-7" />
+        <DrinkFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="음주" after={requestProfileSetupInfo.parameter.drink} />
+        </div>
+    </div>
+    
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <SmokingFillIcon slot="ios" class="w-7 h-7" />
+        <SmokingFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="흡연" after={requestProfileSetupInfo.parameter.smoking} />
+        </div>
+    </div>
+    
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <IntroduceFillIcon slot="ios" class="w-7 h-7" />
+        <IntroduceFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="자기소개" after={requestProfileSetupInfo.parameter.introduce} />
+        </div>
+    </div>
   </List>
 
   <Block outlineIos class="space-y-2">
