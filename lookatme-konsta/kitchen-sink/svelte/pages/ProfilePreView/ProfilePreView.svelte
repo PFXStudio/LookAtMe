@@ -17,6 +17,8 @@
   import RequestProfileSetup from "../../usecases/RequestProfileSetup.svelte";
   import routes from "../../routes.js";
   import SpinLoader from "../Commons/SpinLoader.svelte";
+  import CompanyNameFillIcon from "../../components/Icons/CompanyNameFillIcon.svelte";
+  import SalaryFillIcon from "../../components/Icons/SalaryFillIcon.svelte";
   import BloodFillIcon from "../../components/Icons/BloodFillIcon.svelte";
   import BodyFillIcon from "../../components/Icons/BodyFillIcon.svelte";
   import DrinkFillIcon from "../../components/Icons/DrinkFillIcon.svelte";
@@ -35,6 +37,7 @@
     push,
     pop,
     link,
+    replace,
   } from "svelte-spa-router";
 
   import { parse, stringify } from "qs";
@@ -42,6 +45,9 @@
   const isPreview = document.location.href.includes("examplePreview");
   export let requestProfileSetupInfo = {
     parameter: {
+      name: undefined,
+      salary: undefined,
+      companyName: undefined,
       nickname: undefined,
       region: undefined,
       job: undefined,
@@ -69,16 +75,11 @@
     }
   }
 
-  console.log(">>> parameter");
-  console.log({ requestProfileSetupInfo });
-
   let requestProfileSetup = undefined;
   let loader = undefined;
-  console.log(requestProfileSetupInfo);
   function didTapRequest() {
     requestProfileSetupInfo.status = "loading";
     requestProfileSetup.request(() => {
-      console.log("callback");
       // if (requestProfileSetupInfo.result !== undefined) {
       //   requestProfileSetupInfo.status = "success";
       // } else {
@@ -107,7 +108,24 @@
         <ListItem title="별명" after={requestProfileSetupInfo.parameter.nickname} />
       </div>
     </div>
-
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <CompanyNameFillIcon slot="ios" class="w-7 h-7" />
+        <CompanyNameFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="회사명" after={requestProfileSetupInfo.parameter.companyName} />
+      </div>
+    </div>
+    <div class="flex items-center ml-4 mr-4 w-full">
+      <Icon slot="icon">
+        <SalaryFillIcon slot="ios" class="w-7 h-7" />
+        <SalaryFillIcon slot="material" class="w-6 h-6" />
+      </Icon>
+      <div class="w-full mr-4">
+        <ListItem title="연봉" after={requestProfileSetupInfo.parameter.salary} />
+      </div>
+    </div>
     <div class="flex items-center ml-4 mr-4 w-full">
       <Icon slot="icon">
         <TallFillIcon slot="ios" class="w-7 h-7" />
@@ -115,7 +133,7 @@
       </Icon>
       <div class="w-full mr-4">
         <ListItem title="키" after={requestProfileSetupInfo.parameter.tall} />
-        </div>
+      </div>
     </div>
 
     <div class="flex items-center ml-4 mr-4 w-full">
@@ -135,7 +153,7 @@
       </Icon>
       <div class="w-full mr-4">
         <ListItem title="직업" after={requestProfileSetupInfo.parameter.job} />
-        </div>
+      </div>
     </div>
 
     <div class="flex items-center ml-4 mr-4 w-full">
@@ -145,7 +163,7 @@
       </Icon>
       <div class="w-full mr-4">
         <ListItem title="최종학력" after={requestProfileSetupInfo.parameter.graduation} />
-        </div>
+      </div>
     </div>
 
     <div class="flex items-center ml-4 mr-4 w-full">
@@ -155,7 +173,7 @@
       </Icon>
       <div class="w-full mr-4">
         <ListItem title="체형" after={requestProfileSetupInfo.parameter.body} />
-        </div>
+      </div>
     </div>
 
     <div class="flex items-center ml-4 mr-4 w-full">
@@ -165,7 +183,7 @@
       </Icon>
       <div class="w-full mr-4">
         <ListItem title="혈액형" after={requestProfileSetupInfo.parameter.blood} />
-        </div>
+      </div>
     </div>
 
     <div class="flex items-center ml-4 mr-4 w-full">
@@ -175,7 +193,7 @@
       </Icon>
       <div class="w-full mr-4">
         <ListItem title="종교" after={requestProfileSetupInfo.parameter.religion} />
-        </div>
+      </div>
     </div>
 
     <div class="flex items-center ml-4 mr-4 w-full">
@@ -185,9 +203,9 @@
       </Icon>
       <div class="w-full mr-4">
         <ListItem title="음주" after={requestProfileSetupInfo.parameter.drink} />
-        </div>
+      </div>
     </div>
-    
+
     <div class="flex items-center ml-4 mr-4 w-full">
       <Icon slot="icon">
         <SmokingFillIcon slot="ios" class="w-7 h-7" />
@@ -195,18 +213,19 @@
       </Icon>
       <div class="w-full mr-4">
         <ListItem title="흡연" after={requestProfileSetupInfo.parameter.smoking} />
-        </div>
+      </div>
     </div>
-    
+
     <div class="flex items-center ml-4 mr-4 w-full">
       <Icon slot="icon">
         <IntroduceFillIcon slot="ios" class="w-7 h-7" />
         <IntroduceFillIcon slot="material" class="w-6 h-6" />
       </Icon>
-      <div class="w-full mr-4">
-        <ListItem title="자기소개" after={requestProfileSetupInfo.parameter.introduce} />
-        </div>
+      <div class="flex w-full mr-4">
+        <ListItem title="자기소개" />
+      </div>
     </div>
+    <span class="text ml-4 mr-4" labelText>{requestProfileSetupInfo.parameter.introduce} </span>
   </List>
 
   <Block outlineIos class="space-y-2">
@@ -243,7 +262,6 @@
       <DialogButton
         onClick={() => {
           let route = `#${routes.filter((route) => route.title == "Home")[0].path}`;
-          console.log({ route });
           replace(route);
         }}
       >
@@ -252,3 +270,13 @@
     </svelte:fragment>
   </Dialog>
 </Page>
+
+<style>
+  .text {
+    display: block;
+    width: 92%;
+    height: 100%;
+    margin-left: 48px;
+    margin-bottom: 8px;
+  }
+</style>

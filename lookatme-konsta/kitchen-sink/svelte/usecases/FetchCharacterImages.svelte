@@ -2,7 +2,7 @@
   import { Card, Link, Button } from "konsta/svelte";
   export let route = undefined;
   export let title = undefined;
-  
+
   let characters = [];
 
   async function loadCharacter() {
@@ -11,7 +11,7 @@
     characters = data.results;
   }
 
-loadCharacter();
+  loadCharacter();
 </script>
 
 <div class="lg:grid lg:grid-cols-2">

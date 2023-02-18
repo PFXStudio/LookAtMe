@@ -24,11 +24,23 @@
     replace,
     link,
   } from "svelte-spa-router";
-  import { parse, stringify } from 'qs';
+  import { parse, stringify } from "qs";
+
+  import TallFillIcon from "../../components/Icons/TallFillIcon.svelte";
+  import RegionFillIcon from "../../components/Icons/RegionFillIcon.svelte";
+  import GraduationFillIcon from "../../components/Icons/GraduationFillIcon.svelte";
+  import BodyFillIcon from "../../components/Icons/BodyFillIcon.svelte";
+  import BloodFillIcon from "../../components/Icons/BloodFillIcon.svelte";
+  import ReligionFillIcon from "../../components/Icons/ReligionFillIcon.svelte";
+  import DrinkFillIcon from "../../components/Icons/DrinkFillIcon.svelte";
+  import SmokingFillIcon from "../../components/Icons/SmokingFillIcon.svelte";
 
   const isPreview = document.location.href.includes("examplePreview");
   export let requestProfileSetupInfo = {
     parameter: {
+      name: undefined,
+      salary: undefined,
+      companyName: undefined,
       nickname: undefined,
       region: undefined,
       job: undefined,
@@ -55,9 +67,6 @@
       requestProfileSetupInfo.parameter = parameter;
     }
   }
-
-  console.log(">>> parameter");
-  console.log({requestProfileSetupInfo});
 
   let regionList = ["서울특별시", "경기도", "대전", "대구", "부산"];
   let region = { value: "서울특별시", changed: false, title: "지역" };
@@ -120,11 +129,7 @@
     requestProfileSetupInfo.parameter.smoking = smoking.value;
 
     let parsedQuery = parse(requestProfileSetupInfo) ?? {};
-    console.log('>>> parsedQuery');
-    console.log(parsedQuery);
     let route = routes.filter((route) => route.title == "Profile Pre View")[0];
-    console.log('>>> route');
-    console.log(route);
     push(`${route.path}?${stringify(parsedQuery)}`);
   }
 </script>
@@ -139,31 +144,36 @@
   </Navbar>
 
   <BlockTitle>룩커에게 보여질 프로필 정보를 설정 해 주세요.</BlockTitle>
-  <BlockHeader
-  >{tall.changed && !tall.value.trim()
-    ? "키를 정학하게 설정 해 주세요."
-    : "키를 설정 해 주세요."}
-  {tall.value}cm
-</BlockHeader>
-<List strong insetMaterial outlineIos>
-  <ListItem innerClass="flex space-x-4">
-    <svelte:fragment slot="inner">
-      <span>100cm</span>
-      <Range
-        value={tall.value}
-        step={1}
-        min={100}
-        max={230}
-        onInput={(e) => (tall.value = e.target.value)}
-      />
-      <span>230cm</span>
-    </svelte:fragment>
-  </ListItem>
-</List>
+  <BlockHeader>
+    <div class="flex mr-2">
+      <TallFillIcon />
+    </div>
+    {tall.changed && !tall.value.trim() ? "키를 정학하게 설정 해 주세요." : "키를 설정 해 주세요."}
+    {tall.value}cm
+  </BlockHeader>
+
+  <List strong insetMaterial outlineIos>
+    <ListItem innerClass="flex space-x-4">
+      <svelte:fragment slot="inner">
+        <span>100cm</span>
+        <Range
+          value={tall.value}
+          step={1}
+          min={100}
+          max={230}
+          onInput={(e) => (tall.value = e.target.value)}
+        />
+        <span>230cm</span>
+      </svelte:fragment>
+    </ListItem>
+  </List>
 
   <List strongIos insetIos>
-    <BlockHeader
-      >{region.changed && !region.value.trim()
+    <BlockHeader>
+      <div class="flex mr-2">
+        <RegionFillIcon />
+      </div>
+      {region.changed && !region.value.trim()
         ? "지역을 정학하게 입력 해 주세요."
         : "지역을 입력 해 주세요."}</BlockHeader
     >
@@ -172,8 +182,11 @@
       <Button onClick={() => (didTapRegionButton = true)}>{region.title}</Button>
     </Block>
 
-    <BlockHeader
-      >{graduation.changed && !graduation.value.trim()
+    <BlockHeader>
+      <div class="flex mr-2">
+        <GraduationFillIcon />
+      </div>
+      {graduation.changed && !graduation.value.trim()
         ? "최종학력을 정학하게 입력 해 주세요."
         : "최종학력을 입력 해 주세요."}</BlockHeader
     >
@@ -182,8 +195,11 @@
       <Button onClick={() => (didTapgraduationButton = true)}>{graduation.title}</Button>
     </Block>
 
-    <BlockHeader
-      >{body.changed && !body.value.trim()
+    <BlockHeader>
+      <div class="flex mr-2">
+        <BodyFillIcon />
+      </div>
+      {body.changed && !body.value.trim()
         ? "체형을 정학하게 설정 해 주세요."
         : "체형을 설정 해 주세요."}</BlockHeader
     >
@@ -192,8 +208,11 @@
       <Button onClick={() => (didTapBodyButton = true)}>{body.title}</Button>
     </Block>
 
-    <BlockHeader
-      >{blood.changed && !blood.value.trim()
+    <BlockHeader>
+      <div class="flex mr-2">
+        <BloodFillIcon />
+      </div>
+      {blood.changed && !blood.value.trim()
         ? "혈액형을 정학하게 설정 해 주세요."
         : "혈액형을 설정 해 주세요."}</BlockHeader
     >
@@ -202,8 +221,11 @@
       <Button onClick={() => (didTapBloodButton = true)}>{blood.title}</Button>
     </Block>
 
-    <BlockHeader
-      >{religion.changed && !religion.value.trim()
+    <BlockHeader>
+      <div class="flex mr-2">
+        <ReligionFillIcon />
+      </div>
+      {religion.changed && !religion.value.trim()
         ? "종교를 정학하게 선택 해 주세요."
         : "종교를 선택 해 주세요."}
     </BlockHeader>
@@ -212,8 +234,11 @@
       <Button onClick={() => (didTapReligionButton = true)}>{religion.title}</Button>
     </Block>
 
-    <BlockHeader
-      >{drink.changed && !drink.value.trim()
+    <BlockHeader>
+      <div class="flex mr-2">
+        <DrinkFillIcon />
+      </div>
+      {drink.changed && !drink.value.trim()
         ? "음주를 정학하게 선택 해 주세요."
         : "음주를 선택 해 주세요."}
     </BlockHeader>
@@ -222,8 +247,11 @@
       <Button onClick={() => (didTapDrinkButton = true)}>{drink.title}</Button>
     </Block>
 
-    <BlockHeader
-      >{smoking.changed && !smoking.value.trim()
+    <BlockHeader>
+      <div class="flex mr-2">
+        <SmokingFillIcon />
+      </div>
+      {smoking.changed && !smoking.value.trim()
         ? "흡연을 정학하게 선택 해 주세요."
         : "흡연을 선택 해 주세요."}
     </BlockHeader>
@@ -240,19 +268,18 @@
   <Actions opened={didTapRegionButton} backdrop="false">
     <ActionsGroup>
       {#each regionList as item}
-      <ActionsButton
-        onClick={() => {
-          didTapRegionButton = false;
-          console.log(item);
-          region = { value: item, changed: true, title: item };
-        }}
-      >
-        {item}
-      </ActionsButton>
+        <ActionsButton
+          onClick={() => {
+            didTapRegionButton = false;
+            console.log(item);
+            region = { value: item, changed: true, title: item };
+          }}
+        >
+          {item}
+        </ActionsButton>
       {/each}
     </ActionsGroup>
   </Actions>
-
 
   <Actions opened={didTapBodyButton} backdrop="false">
     <ActionsGroup>

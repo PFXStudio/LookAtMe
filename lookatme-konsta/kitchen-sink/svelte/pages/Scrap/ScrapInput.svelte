@@ -17,14 +17,23 @@
   } from "konsta/svelte";
 
   import DemoIcon from "../../components/DemoIcon.svelte";
+  import { parse, stringify } from "qs";
   import RequestScrap from "../../usecases/RequestScrap.svelte";
   import AuthTypeDescription from "./ScrapInputAuthTypeDescription.svelte";
   import AuthTypeWrongDescription from "./ScrapInputAuthTypeWrongDescription.svelte";
   import routes from "../../routes.js";
   import SpinLoader from "../Commons/SpinLoader.svelte";
-  import { push, pop, replace } from "svelte-spa-router";
+  import Router, {
+    location, // /bla/blabla/route
+    querystring, // /bla?Location=Artworld
+    push,
+    pop,
+    link,
+    replace,
+  } from "svelte-spa-router";
 
   const isPreview = document.location.href.includes("examplePreview");
+  let route = undefined;
   let name = { value: "1", changed: false };
   let email = { value: "1", changed: false };
   let phone = { value: "1", changed: false };
@@ -36,6 +45,38 @@
     result: undefined,
     errorMessage: undefined,
   };
+  export let requestProfileSetupInfo = {
+    parameter: {
+      name: undefined,
+      salary: undefined,
+      companyName: undefined,
+      nickname: undefined,
+      region: undefined,
+      job: undefined,
+      introduce: undefined,
+      tall: undefined,
+      graduation: undefined,
+      body: undefined,
+      blood: undefined,
+      religion: undefined,
+      drink: undefined,
+      smoking: undefined,
+    },
+    status: undefined, // success, failed, loading
+    result: undefined,
+    errorMessage: undefined,
+  };
+
+  $: parsedQuery = parse($querystring) ?? {};
+
+  // Set someVariableStore if found in query param
+  $: {
+    let parameter = parsedQuery.parameter;
+    if (parameter) {
+      requestProfileSetupInfo.parameter = parameter;
+    }
+  }
+
   let requestScrap = undefined;
   let loader = undefined;
 
@@ -83,10 +124,11 @@
     };
     requestScrapInfo.status = "loading";
     requestScrap.request(() => {
-      console.log("callback");
       if (requestScrapInfo.result !== undefined) {
         requestScrapInfo.status = "success";
-        routes.filter;
+        requestProfileSetupInfo.parameter.name = name.value;
+        requestProfileSetupInfo.parameter.salary = "4,444만원";
+        requestProfileSetupInfo.parameter.companyName = "스타벅스";
       } else {
         requestScrapInfo.status = "failed";
       }
@@ -222,9 +264,9 @@
     <svelte:fragment slot="buttons">
       <DialogButton
         onClick={() => {
-          let route = `#${routes.filter((route) => route.title == "Profile Setup")[0].path}`;
-          console.log({ route });
-          replace(route);
+          let parsedQuery = parse(requestProfileSetupInfo) ?? {};
+          let route = routes.filter((route) => route.title == "Profile Setup")[0];
+          replace(`${route.path}?${stringify(parsedQuery)}`);
         }}
       >
         확인

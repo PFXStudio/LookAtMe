@@ -10,6 +10,7 @@
     Button,
     ListItem,
     Dialog,
+    Icon,
   } from "konsta/svelte";
 
   import DemoIcon from "../../components/DemoIcon.svelte";
@@ -24,21 +25,17 @@
     link,
   } from "svelte-spa-router";
   import { parse, stringify } from "qs";
-  import BlockHeader from "../../../../src/svelte/components/BlockHeader.svelte";
   import RequestCheckNickname from "../../usecases/RequestCheckNickname.svelte";
+  import NicknameFillIcon from "../../components/Icons/NicknameFillIcon.svelte";
+  import JobFillIcon from "../../components/Icons/JobFillIcon.svelte";
+  import IntroduceFillIcon from "../../components/Icons/IntroduceFillIcon.svelte";
 
   const isPreview = document.location.href.includes("examplePreview");
-  let nickname = { value: "", changed: false, checkNickname: false };
-  let job = { value: "개발자", changed: false };
-  let introduce = {
-    value:
-      "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-    changed: false,
-  };
-  let route = undefined;
-  let loader = undefined;
   export let requestProfileSetupInfo = {
     parameter: {
+      name: undefined,
+      salary: undefined,
+      companyName: undefined,
       nickname: undefined,
       region: undefined,
       job: undefined,
@@ -55,6 +52,26 @@
     result: undefined,
     errorMessage: undefined,
   };
+
+  $: parsedQuery = parse($querystring) ?? {};
+
+  // Set someVariableStore if found in query param
+  $: {
+    let parameter = parsedQuery.parameter;
+    if (parameter) {
+      requestProfileSetupInfo.parameter = parameter;
+    }
+  }
+
+  let nickname = { value: "", changed: false, checkNickname: false };
+  let job = { value: "개발자", changed: false };
+  let introduce = {
+    value:
+      "11111111111111111111111111 1111111111111111111111111 11111111111111111111111111111111111111111 11111111",
+    changed: false,
+  };
+  let route = undefined;
+  let loader = undefined;
   const onChangedNickname = (e) => {
     errorMessageNickname = "";
     nickname = { value: e.target.value, changed: true, checkNickname: false };
@@ -106,11 +123,10 @@
     requestCheckNickname.request(() => {
       if (requestCheckNicknameInfo.result !== undefined) {
         requestCheckNicknameInfo.status = "success";
-        errorMessageNickname = '';
+        errorMessageNickname = "";
         nickname.changed = true;
         nickname.checkNickname = true;
       } else {
-        console.log(">>> received checkNickname");
         requestCheckNicknameInfo.status = "failed";
         errorMessageNickname = "이미 사용 중인 별명이에요.";
         nickname.changed = true;
@@ -142,7 +158,6 @@
     let parsedQuery = parse(requestProfileSetupInfo) ?? {};
     route = routes.filter((route) => route.title == "Profile Setup Select")[0];
     push(`${route.path}?${stringify(parsedQuery)}`);
-    console.log(`${route.path}?${stringify(parsedQuery)}`);
   }
 </script>
 
@@ -169,7 +184,7 @@
         onInput={onChangedNickname}
         class="w-full grow-1"
       >
-        <DemoIcon slot="media" />
+        <NicknameFillIcon slot="media" />
       </ListInput>
       <Button
         class="mr-4 demo-container"
@@ -197,7 +212,7 @@
       error={job.changed && !job.value.trim() ? "직업을 정학하게 입력 해 주세요." : ""}
       onInput={onChangedJob}
     >
-      <DemoIcon slot="media" />
+      <JobFillIcon slot="media" />
     </ListInput>
 
     <ListInput
@@ -211,7 +226,7 @@
         : ""}
       onInput={onChangedIntroduce}
     >
-      <DemoIcon slot="media" />
+      <IntroduceFillIcon slot="media" />
     </ListInput>
   </List>
   <Block outlineIos class="space-y-2">
