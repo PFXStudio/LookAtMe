@@ -11,12 +11,18 @@
     ListItem,
     Icon,
     TabbarLink,
+    Link,
+    Panel,
+    MenuList,
+    MenuListItem,
   } from "konsta/svelte";
 
   import DemoIcon from "../../components/DemoIcon.svelte";
   import RequestProfileSetup from "../../usecases/RequestProfileSetup.svelte";
   import routes from "../../routes.js";
   import SpinLoader from "../Commons/SpinLoader.svelte";
+  import MoreIcon from "../../components/Icons/MoreIcon.svelte";
+  import CloseFillIcon from "../../components/Icons/CloseFillIcon.svelte";
   import CompanyNameFillIcon from "../../components/Icons/CompanyNameFillIcon.svelte";
   import SalaryFillIcon from "../../components/Icons/SalaryFillIcon.svelte";
   import BloodFillIcon from "../../components/Icons/BloodFillIcon.svelte";
@@ -63,6 +69,7 @@
     status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
+    isPreview: true,
   };
 
   $: parsedQuery = parse($querystring) ?? {};
@@ -77,6 +84,8 @@
 
   let requestProfileSetup = undefined;
   let loader = undefined;
+  let isOpenMoreMenu = false;
+  let selectedOpenMoreMenu = "none";
   function didTapRequest() {
     requestProfileSetupInfo.status = "loading";
     requestProfileSetup.request(() => {
@@ -94,6 +103,15 @@
     <svelte:fragment slot="left">
       {#if !isPreview}
         <NavbarBackLink onClick={() => history.back()} />
+      {/if}
+    </svelte:fragment>
+    <svelte:fragment slot="right">
+      {#if requestProfileSetupInfo.isPreview}
+        <Link slot="right" navbar onClick={() => (isOpenMoreMenu = true)}>
+          <div>
+            <MoreIcon slot="ios" class="w-7 h-7" />
+          </div>
+        </Link>
       {/if}
     </svelte:fragment>
   </Navbar>
@@ -263,6 +281,50 @@
         onClick={() => {
           let route = `#${routes.filter((route) => route.title == "Home")[0].path}`;
           replace(route);
+        }}
+      >
+        확인
+      </DialogButton>
+    </svelte:fragment>
+  </Dialog>
+
+  <Panel
+    side="right"
+    floating
+    opened={isOpenMoreMenu}
+    onBackdropClick={() => (isOpenMoreMenu = false)}
+  >
+    <Page className="no-safe-areas-top no-safe-areas-bottom">
+      <Navbar title="더 보기">
+        <Link slot="right" navbar onClick={() => (isOpenMoreMenu = false)}>
+          <div>
+            <CloseFillIcon slot="ios" class="w-7 h-7" />
+          </div>
+        </Link>
+      </Navbar>
+      <MenuList>
+        <MenuListItem title="🚨 신고하기" onClick={() => (selectedOpenMoreMenu = "report")} />
+      </MenuList>
+    </Page>
+  </Panel>
+
+  <Dialog opened={selectedOpenMoreMenu === "report"} backdrop="false">
+    <svelte:fragment slot="title"
+      >{requestProfileSetupInfo.parameter.nickname} 사용자를 신고 하시겠어요?</svelte:fragment
+    >
+    {"신고한 사용자는 다시 매칭되지 않아요."}
+    <svelte:fragment slot="buttons">
+      <DialogButton
+        onClick={() => {
+          selectedOpenMoreMenu = "";
+        }}
+      >
+        취소
+      </DialogButton>
+      <DialogButton
+        onClick={() => {
+          selectedOpenMoreMenu = "";
+          history.back();
         }}
       >
         확인

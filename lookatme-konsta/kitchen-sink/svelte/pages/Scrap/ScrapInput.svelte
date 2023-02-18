@@ -65,6 +65,7 @@
     status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
+    isPreview: false,
   };
 
   $: parsedQuery = parse($querystring) ?? {};
