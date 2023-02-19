@@ -36,7 +36,7 @@
   import SmokingFillIcon from "../../components/Icons/SmokingFillIcon.svelte";
 
   const isPreview = document.location.href.includes("examplePreview");
-  export let requestProfileSetupInfo = {
+  export let requestProfileInfo = {
     parameter: {
       name: undefined,
       salary: undefined,
@@ -53,6 +53,7 @@
       drink: undefined,
       smoking: undefined,
     },
+    entryPoint: undefined, // myProfile, signup, lookerProfile
     status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
@@ -65,7 +66,12 @@
   $: {
     let parameter = parsedQuery.parameter;
     if (parameter) {
-      requestProfileSetupInfo.parameter = parameter;
+      requestProfileInfo.parameter = parameter;
+    }
+
+    let entryPoint = parsedQuery.entryPoint;
+    if (entryPoint) {
+      requestProfileInfo.entryPoint = entryPoint;
     }
   }
 
@@ -120,16 +126,16 @@
       return;
     }
 
-    requestProfileSetupInfo.parameter.region = region.value;
-    requestProfileSetupInfo.parameter.tall = tall.value;
-    requestProfileSetupInfo.parameter.graduation = graduation.value;
-    requestProfileSetupInfo.parameter.body = body.value;
-    requestProfileSetupInfo.parameter.blood = blood.value;
-    requestProfileSetupInfo.parameter.religion = religion.value;
-    requestProfileSetupInfo.parameter.drink = drink.value;
-    requestProfileSetupInfo.parameter.smoking = smoking.value;
+    requestProfileInfo.parameter.region = region.value;
+    requestProfileInfo.parameter.tall = tall.value;
+    requestProfileInfo.parameter.graduation = graduation.value;
+    requestProfileInfo.parameter.body = body.value;
+    requestProfileInfo.parameter.blood = blood.value;
+    requestProfileInfo.parameter.religion = religion.value;
+    requestProfileInfo.parameter.drink = drink.value;
+    requestProfileInfo.parameter.smoking = smoking.value;
 
-    let parsedQuery = parse(requestProfileSetupInfo) ?? {};
+    let parsedQuery = parse(requestProfileInfo) ?? {};
     let route = routes.filter((route) => route.title == "Profile Pre View")[0];
     push(`${route.path}?${stringify(parsedQuery)}`);
   }

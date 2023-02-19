@@ -7,10 +7,8 @@
     const data = await response.json();
     requestCheckNicknameInfo.result = "success";
     requestCheckNicknameInfo.errorMessage = undefined;
-    requestCheckNicknameInfo.isError = false;
     // requestCheckNicknameInfo.result = undefined;
     // requestCheckNicknameInfo.errorMessage = "error";
-    // requestCheckNicknameInfo.isError = true;
     resultHandler();
   }
 </script>

@@ -31,7 +31,7 @@
   import IntroduceFillIcon from "../../components/Icons/IntroduceFillIcon.svelte";
 
   const isPreview = document.location.href.includes("examplePreview");
-  export let requestProfileSetupInfo = {
+  export let requestProfileInfo = {
     parameter: {
       name: undefined,
       salary: undefined,
@@ -48,6 +48,7 @@
       drink: undefined,
       smoking: undefined,
     },
+    entryPoint: undefined, // myProfile, signup, lookerProfile
     status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
@@ -60,7 +61,12 @@
   $: {
     let parameter = parsedQuery.parameter;
     if (parameter) {
-      requestProfileSetupInfo.parameter = parameter;
+      requestProfileInfo.parameter = parameter;
+    }
+
+    let entryPoint = parsedQuery.entryPoint;
+    if (entryPoint) {
+      requestProfileInfo.entryPoint = entryPoint;
     }
   }
 
@@ -152,11 +158,11 @@
       return;
     }
 
-    requestProfileSetupInfo.parameter.nickname = nickname.value;
-    requestProfileSetupInfo.parameter.job = job.value;
-    requestProfileSetupInfo.parameter.introduce = introduce.value;
+    requestProfileInfo.parameter.nickname = nickname.value;
+    requestProfileInfo.parameter.job = job.value;
+    requestProfileInfo.parameter.introduce = introduce.value;
 
-    let parsedQuery = parse(requestProfileSetupInfo) ?? {};
+    let parsedQuery = parse(requestProfileInfo) ?? {};
     route = routes.filter((route) => route.title == "Profile Setup Select")[0];
     push(`${route.path}?${stringify(parsedQuery)}`);
   }

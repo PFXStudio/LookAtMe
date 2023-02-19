@@ -45,7 +45,7 @@
     result: undefined,
     errorMessage: undefined,
   };
-  export let requestProfileSetupInfo = {
+  export let requestProfileInfo = {
     parameter: {
       name: undefined,
       salary: undefined,
@@ -62,6 +62,7 @@
       drink: undefined,
       smoking: undefined,
     },
+    entryPoint: "signup", // myProfile, signup, lookerProfile
     status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
@@ -74,7 +75,12 @@
   $: {
     let parameter = parsedQuery.parameter;
     if (parameter) {
-      requestProfileSetupInfo.parameter = parameter;
+      requestProfileInfo.parameter = parameter;
+    }
+
+    let entryPoint = parsedQuery.entryPoint;
+    if (entryPoint) {
+      requestProfileInfo.entryPoint = entryPoint;
     }
   }
 
@@ -127,9 +133,9 @@
     requestScrap.request(() => {
       if (requestScrapInfo.result !== undefined) {
         requestScrapInfo.status = "success";
-        requestProfileSetupInfo.parameter.name = name.value;
-        requestProfileSetupInfo.parameter.salary = "4,444만원";
-        requestProfileSetupInfo.parameter.companyName = "스타벅스";
+        requestProfileInfo.parameter.name = name.value;
+        requestProfileInfo.parameter.salary = "4,444만원";
+        requestProfileInfo.parameter.companyName = "스타벅스";
       } else {
         requestScrapInfo.status = "failed";
       }
@@ -265,7 +271,7 @@
     <svelte:fragment slot="buttons">
       <DialogButton
         onClick={() => {
-          let parsedQuery = parse(requestProfileSetupInfo) ?? {};
+          let parsedQuery = parse(requestProfileInfo) ?? {};
           let route = routes.filter((route) => route.title == "Profile Setup")[0];
           replace(`${route.path}?${stringify(parsedQuery)}`);
         }}

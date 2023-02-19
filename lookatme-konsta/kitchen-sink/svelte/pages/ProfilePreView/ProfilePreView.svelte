@@ -49,7 +49,7 @@
   import { parse, stringify } from "qs";
 
   const isPreview = document.location.href.includes("examplePreview");
-  export let requestProfileSetupInfo = {
+  export let requestProfileInfo = {
     parameter: {
       name: undefined,
       salary: undefined,
@@ -66,19 +66,26 @@
       drink: undefined,
       smoking: undefined,
     },
+    entryPoint: undefined, // myProfile, signup, lookerProfile
     status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
-    isPreview: true,
+    isPreview: false,
   };
 
   $: parsedQuery = parse($querystring) ?? {};
 
   // Set someVariableStore if found in query param
   $: {
+    console.log(parsedQuery);
     let parameter = parsedQuery.parameter;
     if (parameter) {
-      requestProfileSetupInfo.parameter = parameter;
+      requestProfileInfo.parameter = parameter;
+    }
+
+    let entryPoint = parsedQuery.entryPoint;
+    if (entryPoint) {
+      requestProfileInfo.entryPoint = entryPoint;
     }
   }
 
@@ -87,13 +94,13 @@
   let isOpenMoreMenu = false;
   let selectedOpenMoreMenu = "none";
   function didTapRequest() {
-    requestProfileSetupInfo.status = "loading";
+    requestProfileInfo.status = "loading";
     requestProfileSetup.request(() => {
-      // if (requestProfileSetupInfo.result !== undefined) {
-      //   requestProfileSetupInfo.status = "success";
-      // } else {
-      //   requestProfileSetupInfo.status = "failed";
-      // }
+      if (requestProfileInfo.result !== undefined) {
+        requestProfileInfo.status = "success";
+      } else {
+        requestProfileInfo.status = "failed";
+      }
     });
   }
 </script>
@@ -106,7 +113,7 @@
       {/if}
     </svelte:fragment>
     <svelte:fragment slot="right">
-      {#if requestProfileSetupInfo.isPreview}
+      {#if requestProfileInfo.isPreview}
         <Link slot="right" navbar onClick={() => (isOpenMoreMenu = true)}>
           <div>
             <MoreIcon slot="ios" class="w-7 h-7" />
@@ -123,7 +130,7 @@
         <NicknameFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="별명" after={requestProfileSetupInfo.parameter.nickname} />
+        <ListItem title="별명" after={requestProfileInfo.parameter.nickname} />
       </div>
     </div>
     <div class="flex items-center ml-4 mr-4 w-full">
@@ -132,7 +139,7 @@
         <CompanyNameFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="회사명" after={requestProfileSetupInfo.parameter.companyName} />
+        <ListItem title="회사명" after={requestProfileInfo.parameter.companyName} />
       </div>
     </div>
     <div class="flex items-center ml-4 mr-4 w-full">
@@ -141,7 +148,7 @@
         <SalaryFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="연봉" after={requestProfileSetupInfo.parameter.salary} />
+        <ListItem title="연봉" after={requestProfileInfo.parameter.salary} />
       </div>
     </div>
     <div class="flex items-center ml-4 mr-4 w-full">
@@ -150,7 +157,7 @@
         <TallFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="키" after={requestProfileSetupInfo.parameter.tall} />
+        <ListItem title="키" after={requestProfileInfo.parameter.tall} />
       </div>
     </div>
 
@@ -160,7 +167,7 @@
         <RegionFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="지역" after={requestProfileSetupInfo.parameter.region} />
+        <ListItem title="지역" after={requestProfileInfo.parameter.region} />
       </div>
     </div>
 
@@ -170,7 +177,7 @@
         <JobFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="직업" after={requestProfileSetupInfo.parameter.job} />
+        <ListItem title="직업" after={requestProfileInfo.parameter.job} />
       </div>
     </div>
 
@@ -180,7 +187,7 @@
         <GraduationFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="최종학력" after={requestProfileSetupInfo.parameter.graduation} />
+        <ListItem title="최종학력" after={requestProfileInfo.parameter.graduation} />
       </div>
     </div>
 
@@ -190,7 +197,7 @@
         <BodyFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="체형" after={requestProfileSetupInfo.parameter.body} />
+        <ListItem title="체형" after={requestProfileInfo.parameter.body} />
       </div>
     </div>
 
@@ -200,7 +207,7 @@
         <BloodFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="혈액형" after={requestProfileSetupInfo.parameter.blood} />
+        <ListItem title="혈액형" after={requestProfileInfo.parameter.blood} />
       </div>
     </div>
 
@@ -210,7 +217,7 @@
         <ReligionFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="종교" after={requestProfileSetupInfo.parameter.religion} />
+        <ListItem title="종교" after={requestProfileInfo.parameter.religion} />
       </div>
     </div>
 
@@ -220,7 +227,7 @@
         <DrinkFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="음주" after={requestProfileSetupInfo.parameter.drink} />
+        <ListItem title="음주" after={requestProfileInfo.parameter.drink} />
       </div>
     </div>
 
@@ -230,7 +237,7 @@
         <SmokingFillIcon slot="material" class="w-6 h-6" />
       </Icon>
       <div class="w-full mr-4">
-        <ListItem title="흡연" after={requestProfileSetupInfo.parameter.smoking} />
+        <ListItem title="흡연" after={requestProfileInfo.parameter.smoking} />
       </div>
     </div>
 
@@ -243,23 +250,23 @@
         <ListItem title="자기소개" />
       </div>
     </div>
-    <span class="text ml-4 mr-4" labelText>{requestProfileSetupInfo.parameter.introduce} </span>
+    <span class="text ml-4 mr-4" labelText>{requestProfileInfo.parameter.introduce} </span>
   </List>
 
   <Block outlineIos class="space-y-2">
     <Button large class="k-color-brand-yellow" onClick={didTapRequest}>프로필 정보 설정하기</Button>
-    <RequestProfileSetup {requestProfileSetupInfo} bind:this={requestProfileSetup} />
+    <RequestProfileSetup {requestProfileInfo} bind:this={requestProfileSetup} />
   </Block>
 
-  <Dialog opened={requestProfileSetupInfo.status === "failed"} backdrop="false">
+  <Dialog opened={requestProfileInfo.status === "failed"} backdrop="false">
     <svelte:fragment slot="title">프로필 정보 설정에 실패했어요. 😭</svelte:fragment>
-    {requestProfileSetupInfo.errorMessage}
+    {requestProfileInfo.errorMessage}
     <svelte:fragment slot="buttons">
       <DialogButton
         onClick={() => {
-          requestProfileSetupInfo.result = undefined;
-          requestProfileSetupInfo.status = undefined;
-          requestProfileSetupInfo.errorMessage = undefined;
+          requestProfileInfo.result = undefined;
+          requestProfileInfo.status = undefined;
+          requestProfileInfo.errorMessage = undefined;
           // TODO : stop
         }}
       >
@@ -267,20 +274,25 @@
       </DialogButton>
     </svelte:fragment>
   </Dialog>
-  <Dialog opened={requestProfileSetupInfo.status === "loading"} backdrop="false">
+  <Dialog opened={requestProfileInfo.status === "loading"} backdrop="false">
     <svelte:fragment slot="title">정보를 저장하는 중이에요...</svelte:fragment>
     <Block />
     <SpinLoader {loader} />
   </Dialog>
 
-  <Dialog opened={requestProfileSetupInfo.status === "success"} backdrop="false">
+  <Dialog opened={requestProfileInfo.status === "success"} backdrop="false">
     <svelte:fragment slot="title">프로필 정보를 정상적으로 적용했어요. 🙂</svelte:fragment>
     {"내 정보내 정보내 정보내 정보내 정보내 정보"}
     <svelte:fragment slot="buttons">
       <DialogButton
         onClick={() => {
-          let route = `#${routes.filter((route) => route.title == "Home")[0].path}`;
-          replace(route);
+          if (requestProfileInfo.entryPoint === "signup") {
+            // loggined
+            let route = routes.filter((route) => route.title == "Main")[0];
+            replace(`${route.path}?${stringify(parsedQuery)}`);
+          } else {
+            history.back();
+          }
         }}
       >
         확인
@@ -310,7 +322,7 @@
 
   <Dialog opened={selectedOpenMoreMenu === "report"} backdrop="false">
     <svelte:fragment slot="title"
-      >{requestProfileSetupInfo.parameter.nickname} 사용자를 신고 하시겠어요?</svelte:fragment
+      >{requestProfileInfo.parameter.nickname} 사용자를 신고 하시겠어요? 😢</svelte:fragment
     >
     {"신고한 사용자는 다시 매칭되지 않아요."}
     <svelte:fragment slot="buttons">
