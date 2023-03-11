@@ -70,7 +70,6 @@
     status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
-    isPreview: false,
   };
 
   $: parsedQuery = parse($querystring) ?? {};
@@ -108,12 +107,15 @@
 <Page>
   <Navbar title="프로필 정보">
     <svelte:fragment slot="left">
-      {#if !isPreview}
-        <NavbarBackLink onClick={() => history.back()} />
-      {/if}
+      <NavbarBackLink
+        onClick={() => {
+          console.log(">>> didTap back");
+          history.back();
+        }}
+      />
     </svelte:fragment>
     <svelte:fragment slot="right">
-      {#if requestProfileInfo.isPreview}
+      {#if requestProfileInfo.entryPoint === "lookerProfile"}
         <Link slot="right" navbar onClick={() => (isOpenMoreMenu = true)}>
           <div>
             <MoreIcon slot="ios" class="w-7 h-7" />
@@ -253,10 +255,14 @@
     <span class="text ml-4 mr-4" labelText>{requestProfileInfo.parameter.introduce} </span>
   </List>
 
-  <Block outlineIos class="space-y-2">
-    <Button large class="k-color-brand-yellow" onClick={didTapRequest}>프로필 정보 설정하기</Button>
-    <RequestProfileSetup {requestProfileInfo} bind:this={requestProfileSetup} />
-  </Block>
+  {#if requestProfileInfo.entryPoint !== "lookerProfile"}
+    <Block outlineIos class="space-y-2">
+      <Button large class="k-color-brand-yellow" onClick={didTapRequest}
+        >프로필 정보 설정하기</Button
+      >
+      <RequestProfileSetup {requestProfileInfo} bind:this={requestProfileSetup} />
+    </Block>
+  {/if}
 
   <Dialog opened={requestProfileInfo.status === "failed"} backdrop="false">
     <svelte:fragment slot="title">프로필 정보 설정에 실패했어요. 😭</svelte:fragment>
@@ -288,9 +294,11 @@
         onClick={() => {
           if (requestProfileInfo.entryPoint === "signup") {
             // loggined
+            console.log(">>> to main");
             let route = routes.filter((route) => route.title == "Main")[0];
             replace(`${route.path}?${stringify(parsedQuery)}`);
           } else {
+            console.log(">>> back");
             history.back();
           }
         }}

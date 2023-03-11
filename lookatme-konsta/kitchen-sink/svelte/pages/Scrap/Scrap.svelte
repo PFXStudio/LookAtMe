@@ -3,6 +3,7 @@
   import routes from "../../routes.js";
 
   import FetchCharacterImages from "../../usecases/FetchCharacterImages.svelte";
+  console.log(">>> scrap");
 </script>
 
 <div style={"margin-bottom:6rem"}>

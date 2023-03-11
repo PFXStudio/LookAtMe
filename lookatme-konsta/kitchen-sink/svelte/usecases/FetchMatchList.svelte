@@ -18,6 +18,7 @@
     fetchMatchListInfo.parameter.religion = "천주교";
     fetchMatchListInfo.parameter.drink = "어쩔 수 없을 때만";
     fetchMatchListInfo.parameter.smoking = "흡연";
+    fetchMatchListInfo.parameter.status = "수락을 기다리고 있는 중이에요.";
     fetchMatchListInfo.errorMessage = undefined;
     resultHandler();
   }

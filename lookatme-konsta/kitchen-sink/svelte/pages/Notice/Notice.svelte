@@ -48,7 +48,7 @@
           <div
             slot="header"
             class="ios:-mx-4 ios:-mt-4 h-48 p-4 flex items-end text-white ios:font-bold bg-cover bg-center material:rounded-xl mb-4 material:text-[22px]"
-            style="background-image: url({item.image})"
+            style="background-image: url({item.imagePath})"
           >
             {item.title}
           </div>
@@ -70,6 +70,5 @@
     {/if}
     </div>
   
-
   {#await doFetch()}{/await}
 </Page>

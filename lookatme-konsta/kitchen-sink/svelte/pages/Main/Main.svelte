@@ -12,6 +12,7 @@
 
   // Looker, Match, Notice, Setup
   let activeTab = "Looker";
+  document.documentElement.classList.toggle('dark', true);
 </script>
 
 <Page>

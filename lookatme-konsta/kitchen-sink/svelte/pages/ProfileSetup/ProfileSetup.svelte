@@ -48,11 +48,10 @@
       drink: undefined,
       smoking: undefined,
     },
-    entryPoint: undefined, // myProfile, signup, lookerProfile
+    entryPoint: 'myProfile', // myProfile, signup, lookerProfile
     status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
-    isPreview: false,
   };
 
   $: parsedQuery = parse($querystring) ?? {};

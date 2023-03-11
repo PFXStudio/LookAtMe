@@ -9,9 +9,11 @@
     link,
     replace,
   } from "svelte-spa-router";
-
   import { parse, stringify } from "qs";
+  import routes from "../../routes.js";
 
+  // TODO : 프로필프리뷰에서 matchingList로 안 가는 문제 있음
+  console.log(">>> matchingList");
   export let fetchMatchListInfo = {
     parameter: {
       name: undefined,
@@ -28,13 +30,13 @@
       religion: undefined,
       drink: undefined,
       smoking: undefined,
+      status: undefined,
     },
+    entryPoint: "lookerProfile", // myProfile, signup, lookerProfile
     status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
   };
-
-  export let status = "";
 </script>
 
 <div style={"margin-bottom:6rem"}>
@@ -44,9 +46,15 @@
       chevronMaterial={false}
       link
       title={fetchMatchListInfo.parameter.nickname}
-      after={status}
+      after={fetchMatchListInfo.parameter.status}
       subtitle={fetchMatchListInfo.parameter.companyName}
-      text={fetchMatchListInfo.parameter.introduce}
+      footer={'남은시간 : 01:14:33'}
+      onClick={() => {
+        let parsedQuery = parse(fetchMatchListInfo) ?? {};
+        let route = routes.filter((route) => route.title == "Profile Pre View")[0];
+        push(`${route.path}?${stringify(parsedQuery)}`);
+      }
+    }
     >
       <img
         class="ios:rounded-lg material:rounded-full ios:w-20 material:w-10"
@@ -55,41 +63,6 @@
         width="80"
         alt="demo"
       />
-      <div class="flex items-center ml-4 mr-4 w-full">
-        <Chip class="m-0.5" colors={{ fillBg: "bg-red-500", fillText: "text-white" }}>
-          {fetchMatchListInfo.parameter.salary}
-        </Chip>
-        <Chip class="m-0.5" colors={{ fillBg: "bg-green-500", fillText: "text-white" }}>
-          {fetchMatchListInfo.parameter.tall}
-        </Chip>
-        <Chip class="m-0.5" colors={{ fillBg: "bg-blue-500", fillText: "text-white" }}>
-          {fetchMatchListInfo.parameter.region}
-        </Chip>
-        <Chip class="m-0.5" colors={{ fillBg: "bg-yellow-500", fillText: "text-white" }}>
-          {fetchMatchListInfo.parameter.graduation}
-        </Chip>
-      </div>
-      <div class="flex items-center ml-4 mr-4 w-full">
-        <Chip class="m-0.5" colors={{ fillBg: "bg-pink-500", fillText: "text-white" }}>
-          {fetchMatchListInfo.parameter.body}
-        </Chip>
-
-        <Chip class="m-0.5" colors={{ fillBg: "bg-red-500", fillText: "text-white" }}>
-          {fetchMatchListInfo.parameter.blood}
-        </Chip>
-
-        <Chip class="m-0.5" colors={{ fillBg: "bg-green-500", fillText: "text-white" }}>
-          {fetchMatchListInfo.parameter.religion}
-        </Chip>
-
-        <Chip class="m-0.5" colors={{ fillBg: "bg-blue-500", fillText: "text-white" }}>
-          {fetchMatchListInfo.parameter.drink}
-        </Chip>
-
-        <Chip class="m-0.5" colors={{ fillBg: "bg-gray-500", fillText: "text-white" }}>
-          {fetchMatchListInfo.parameter.smoking}
-        </Chip>
-      </div>
     </ListItem>
   </List>
 </div>

@@ -26,13 +26,18 @@
       religion: undefined,
       drink: undefined,
       smoking: undefined,
+      status: undefined,
     },
+    entryPoint: "lookerProfile", // myProfile, signup, lookerProfile
     status: undefined, // success, failed, loading
     result: undefined,
     errorMessage: undefined,
   };
 
+
+  console.log(">>> match");
   async function fetchData() {
+    console.log(">>> fetchData");
     const res = await fetch("");
     // const data = await res.json();
     fetchMatchList.request(() => {
@@ -52,6 +57,7 @@
   <Navbar title="LookAtMe">
     <Link navbar iconOnly slot="right" />
   </Navbar>
+  
   <FetchMatchList {fetchMatchListInfo} bind:this={fetchMatchList} />
 
   {#if fetchMatchListInfo.result}
